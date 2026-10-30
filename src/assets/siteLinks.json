@@ -15,24 +15,24 @@
     "icon": "Lock",
     "iconUrl": "",
     "name": "API",
-    "link": "https://api.lovlin.eu.cc/"
+    "link": "https://api.lovlin.eu.cc"
   },
   {
     "icon": "Fire",
     "iconUrl": "",
     "name": "Hot",
-    "link": "javascript:alert('站点维护中，暂时无法访问！')"
+    "link": "javascript:;"
   },
   {
     "icon": "LaptopCode",
     "iconUrl": "",
     "name": "Site",
-    "link": "javascript:alert('站点维护中，暂时无法访问！')"
+    "link": "javascript:;"
   },
   {
     "icon": "Cloud",
     "iconUrl": "",
     "name": "OpenList",
-    "link": "javascript:alert('站点维护中，暂时无法访问！')"
+    "link": "javascript:;"
   }
 ]
