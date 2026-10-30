@@ -39,7 +39,6 @@ import { Icon } from "@vicons/utils";
 import { computed, onMounted } from 'vue';
 // 可前往 https://www.xicons.org 自行挑选并在此处引入
 import { Link, Blog, Server, CompactDisc, Cloud, Compass, Toolbox, Fire, LaptopCode, Lock, Code, Cloudflare, Heart } from "@vicons/fa"; // 注意使用正确的类别
-import { mainStore } from "@/store";
 import { Swiper, SwiperSlide } from "swiper/vue";
 // Import Swiper styles
 import 'swiper/css';
@@ -47,8 +46,6 @@ import 'swiper/css/pagination';
 // Import required modules
 import { Pagination, Mousewheel } from 'swiper/modules';
 import siteLinks from "@/assets/siteLinks.json";
-
-const store = mainStore();
 const modules = [Pagination, Mousewheel];
 
 // 计算网站链接
@@ -79,8 +76,10 @@ const siteIcon = {
 
 // 链接跳转
 const jumpLink = (data) => {
-  if (data.name === "Hot" && store.musicClick) {
+  // Hot 固定弹出音乐列表，不再受设置开关控制
+  if (data.name === "Hot") {
     if (typeof $openList === "function") $openList();
+    else window.open(data.link, "_blank");
   } else {
     window.open(data.link, "_blank");
   }
