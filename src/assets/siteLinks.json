@@ -1,0 +1,38 @@
+[
+  {
+    "icon": "Blog",
+    "iconUrl": "",
+    "name": "My Blog",
+    "link": "javascript:alert('站点维护中，暂时无法访问！')"
+  },
+  {
+    "icon": "Cloudflare",
+    "iconUrl": "",
+    "name": "NB优选",
+    "link": "javascript:alert('站点维护中，暂时无法访问！')"
+  },
+  {
+    "icon": "Code",
+    "iconUrl": "",
+    "name": "My API",
+    "link": "javascript:alert('站点维护中，暂时无法访问！')"
+  },
+  {
+    "icon": "Fire",
+    "iconUrl": "",
+    "name": "今日热榜",
+    "link": "javascript:alert('站点维护中，暂时无法访问！')"
+  },
+  {
+    "icon": "LaptopCode",
+    "iconUrl": "",
+    "name": "站点监测",
+    "link": "javascript:alert('站点维护中，暂时无法访问！')"
+  },
+  {
+    "icon": "Cloud",
+    "iconUrl": "",
+    "name": "OpenList",
+    "link": "javascript:alert('站点维护中，暂时无法访问！')"
+  }
+]

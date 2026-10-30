@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Github",
+    "icon": "/home-image/icon/github.png",
+    "tip": "探索 Github ~",
+    "url": "https://github.com/lql6639"
+  },
+  {
+    "name": "Gitee",
+    "icon": "/home-image/icon/gitee.png",
+    "tip": "探索 Gitee ~",
+    "url": "https://gitee.com/lql6639"
+  },
+  {
+    "name": "QQ",
+    "icon": "/home-image/icon/qq.png",
+    "tip": "有什么事吗 ~",
+    "url": "https://qm.qq.com/q/xiyMGvkhqw"
+  },
+  {
+    "name": "Email",
+    "icon": "/home-image/icon/email.png",
+    "tip": "来封 Email ~",
+    "url": "mailto:1740242084@qq.com"
+  },
+  {
+    "name": "Douyin",
+    "icon": "/home-image/icon/douyin.png",
+    "tip": "抖音 ~",
+    "url": "https://v.douyin.com/vLSFMgvKMt8/ 4@5.com :2pm"
+  },
+  {
+    "name": "BiliBili",
+    "icon": "/home-image/icon/bilibili.png",
+    "tip": "(⁎⁍̴̛ᴗ⁍̴̛⁎)干杯 ~",
+    "url": "https://space.bilibili.com/2073021411"
+  },
+  {
+    "name": "Twitter",
+    "icon": "/home-image/icon/twitter.png",
+    "tip": "Twitter ~",
+    "url": "https://twitter.com"
+  }
+]
