@@ -38,7 +38,7 @@
 import { Icon } from "@vicons/utils";
 import { computed, onMounted } from 'vue';
 // 可前往 https://www.xicons.org 自行挑选并在此处引入
-import { Link, Blog, Server, CompactDisc, Cloud, Compass, Toolbox, Fire, LaptopCode, Code, Cloudflare } from "@vicons/fa"; // 注意使用正确的类别
+import { Link, Blog, Server, CompactDisc, Cloud, Compass, Toolbox, Fire, LaptopCode, Lock, Code, Cloudflare, Heart } from "@vicons/fa"; // 注意使用正确的类别
 import { mainStore } from "@/store";
 import { Swiper, SwiperSlide } from "swiper/vue";
 // Import Swiper styles
@@ -70,6 +70,8 @@ const siteIcon = {
   Compass,
   Toolbox,
   Fire,
+  Heart,
+  Lock,
   LaptopCode,
   Code,
   Cloudflare,
@@ -77,7 +79,7 @@ const siteIcon = {
 
 // 链接跳转
 const jumpLink = (data) => {
-  if (data.name === "音乐" && store.musicClick) {
+  if (data.name === "Hot" && store.musicClick) {
     if (typeof $openList === "function") $openList();
   } else {
     window.open(data.link, "_blank");

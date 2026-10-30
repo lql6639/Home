@@ -2,11 +2,18 @@
   "name": "Home",
   "version": "6.0.0",
   "private": true,
-  "home": "https://lovlin.eu.cc",
-  "github": "https://github.com/imsyy",
   "author": "koizora",
+  "home": "https://lovlin.eu.cc",
   "AuthorGithub": "https://github.com/lql6639",
   "license": "MIT",
+  "homepage": "https://github.com/lql6639/Home#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lql6639/Home.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lql6639/Home/issues"
+  },
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",

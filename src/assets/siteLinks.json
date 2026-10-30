@@ -1,32 +1,32 @@
 [
   {
-    "icon": "Blog",
+    "icon": "Heart",
     "iconUrl": "",
-    "name": "My Blog",
-    "link": "javascript:alert('站点维护中，暂时无法访问！')"
+    "name": "Love",
+    "link": "https://love.lovlin.eu.cc"
   },
   {
     "icon": "CompactDisc",
     "iconUrl": "",
-    "name": "音乐",
-    "link": "javascript:alert('站点维护中，暂时无法访问！')"
+    "name": "Music",
+    "link": "https://music.lovlin.eu.cc"
   },
   {
-    "icon": "Code",
+    "icon": "Lock",
     "iconUrl": "",
-    "name": "My API",
-    "link": "javascript:alert('站点维护中，暂时无法访问！')"
+    "name": "API",
+    "link": "https://api.lovlin.eu.cc/"
   },
   {
     "icon": "Fire",
     "iconUrl": "",
-    "name": "今日热榜",
+    "name": "Hot",
     "link": "javascript:alert('站点维护中，暂时无法访问！')"
   },
   {
     "icon": "LaptopCode",
     "iconUrl": "",
-    "name": "站点监测",
+    "name": "Site",
     "link": "javascript:alert('站点维护中，暂时无法访问！')"
   },
   {
