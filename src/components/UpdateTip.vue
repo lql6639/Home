@@ -2,8 +2,8 @@
   <Transition name="slide-up">
     <div v-if="hasUpdate" class="update-tip">
       <div class="dot" />
-      <span class="text">发现新版本，刷新后生效</span>
-      <button class="btn primary" @click="applyUpdate">立即更新</button>
+      <span class="text">页面有更新，刷新后生效</span>
+      <button class="btn primary" @click="applyUpdate">刷新</button>
       <button class="btn" @click="ignoreUpdate">稍后</button>
     </div>
   </Transition>
@@ -11,7 +11,12 @@
 
 <script setup>
 import { onMounted } from 'vue'
-import { hasUpdate, ignoreUpdate, applyUpdate, startUpdateWatcher } from '@/utils/update.js'
+import {
+  hasUpdate,
+  ignoreUpdate,
+  applyUpdate,
+  startUpdateWatcher
+} from '@/utils/update.js'
 
 onMounted(() => {
   startUpdateWatcher()

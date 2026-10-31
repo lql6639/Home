@@ -19,7 +19,11 @@
           </a>
         </span>
         <!-- 站点备案 -->
-        <a v-if="siteIcp" href="https://icp.gov.moe/?keyword=20262044" target="_blank">
+        <a
+          v-if="siteIcp"
+          href="https://icp.gov.moe/?keyword=20262044"
+          target="_blank"
+        >
           &amp;
           {{ siteIcp }}
         </a>
@@ -38,26 +42,26 @@
 </template>
 
 <script setup>
-import { MusicOne } from "@icon-park/vue-next";
-import { mainStore } from "@/store";
-import config from "@/../package.json";
+import { MusicOne } from '@icon-park/vue-next'
+import { mainStore } from '@/store'
+import config from '@/../package.json'
 
-const store = mainStore();
-const fullYear = new Date().getFullYear();
+const store = mainStore()
+const fullYear = new Date().getFullYear()
 
 // 加载配置数据
-const siteStartDate = ref(import.meta.env.VITE_SITE_START);
-const siteIcp = ref(import.meta.env.VITE_SITE_ICP);
-const siteAnthor = ref(import.meta.env.VITE_SITE_ANTHOR);
+const siteStartDate = ref(import.meta.env.VITE_SITE_START)
+const siteIcp = ref(import.meta.env.VITE_SITE_ICP)
+const siteAnthor = ref(import.meta.env.VITE_SITE_ANTHOR)
 const siteUrl = computed(() => {
-  const url = import.meta.env.VITE_SITE_URL;
-  if (!url) return "https://imbee.top";
+  const url = import.meta.env.VITE_SITE_URL
+  if (!url) return 'https://imbee.top'
   // 判断协议前缀
-  if (!url.startsWith("http://") && !url.startsWith("https://")) {
-    return "//" + url;
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    return '//' + url
   }
-  return url;
-});
+  return url
+})
 </script>
 
 <style lang="scss" scoped>

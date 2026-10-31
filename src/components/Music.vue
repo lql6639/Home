@@ -1,33 +1,74 @@
 <template>
   <!-- 音乐控制面板 -->
-  <div class="music" @mouseenter="volumeShow = true" @mouseleave="volumeShow = false" v-show="store.musicOpenState">
+  <div
+    class="music"
+    @mouseenter="volumeShow = true"
+    @mouseleave="volumeShow = false"
+    v-show="store.musicOpenState"
+  >
     <div class="btns">
       <span @click="openMusicList()">音乐列表</span>
       <span @click="store.musicOpenState = false">回到一言</span>
     </div>
     <div class="control">
-      <go-start theme="filled" size="30" fill="#efefef" @click="changeMusicIndex(0)" />
+      <go-start
+        theme="filled"
+        size="30"
+        fill="#efefef"
+        @click="changeMusicIndex(0)"
+      />
       <div class="state" @click="changePlayState">
-        <play-one theme="filled" size="50" fill="#efefef" v-show="!store.playerState" />
-        <pause theme="filled" size="50" fill="#efefef" v-show="store.playerState" />
+        <play-one
+          theme="filled"
+          size="50"
+          fill="#efefef"
+          v-show="!store.playerState"
+        />
+        <pause
+          theme="filled"
+          size="50"
+          fill="#efefef"
+          v-show="store.playerState"
+        />
       </div>
-      <go-end theme="filled" size="30" fill="#efefef" @click="changeMusicIndex(1)" />
+      <go-end
+        theme="filled"
+        size="30"
+        fill="#efefef"
+        @click="changeMusicIndex(1)"
+      />
     </div>
     <div class="menu">
       <div class="name" v-show="!volumeShow">
         <span>{{
           store.getPlayerData.name
-            ? store.getPlayerData.name + " - " + store.getPlayerData.artist
-            : "未播放音乐"
+            ? store.getPlayerData.name + ' - ' + store.getPlayerData.artist
+            : '未播放音乐'
         }}</span>
       </div>
       <div class="volume" v-show="volumeShow">
         <div class="icon">
-          <volume-mute theme="filled" size="24" fill="#efefef" v-if="volumeNum == 0" />
-          <volume-small theme="filled" size="24" fill="#efefef" v-else-if="volumeNum > 0 && volumeNum < 0.7" />
+          <volume-mute
+            theme="filled"
+            size="24"
+            fill="#efefef"
+            v-if="volumeNum == 0"
+          />
+          <volume-small
+            theme="filled"
+            size="24"
+            fill="#efefef"
+            v-else-if="volumeNum > 0 && volumeNum < 0.7"
+          />
           <volume-notice theme="filled" size="24" fill="#efefef" v-else />
         </div>
-        <el-slider v-model="volumeNum" :show-tooltip="false" :min="0" :max="1" :step="0.01" />
+        <el-slider
+          v-model="volumeNum"
+          :show-tooltip="false"
+          :min="0"
+          :max="1"
+          :step="0.01"
+        />
       </div>
     </div>
   </div>
@@ -36,9 +77,20 @@
     <div class="music-list" v-show="musicListShow" @click="closeMusicList()">
       <Transition name="zoom">
         <div class="list" v-show="musicListShow" @click.stop>
-          <close-one class="close" theme="filled" size="28" fill="#ffffff60" @click="closeMusicList()" />
-          <Player ref="playerRef" :songServer="playerData.server" :songType="playerData.type" :songId="playerData.id"
-            :volume="volumeNum" />
+          <close-one
+            class="close"
+            theme="filled"
+            size="28"
+            fill="#ffffff60"
+            @click="closeMusicList()"
+          />
+          <Player
+            ref="playerRef"
+            :songServer="playerData.server"
+            :songType="playerData.type"
+            :songId="playerData.id"
+            :volume="volumeNum"
+          />
         </div>
       </Transition>
     </div>
@@ -54,69 +106,69 @@ import {
   CloseOne,
   VolumeMute,
   VolumeSmall,
-  VolumeNotice,
-} from "@icon-park/vue-next";
-import Player from "@/components/Player.vue";
-import { mainStore } from "@/store";
-const store = mainStore();
+  VolumeNotice
+} from '@icon-park/vue-next'
+import Player from '@/components/Player.vue'
+import { mainStore } from '@/store'
+const store = mainStore()
 
 // 音量条数据
-const volumeShow = ref(false);
-const volumeNum = ref(store.musicVolume ? store.musicVolume : 0.8);
+const volumeShow = ref(false)
+const volumeNum = ref(store.musicVolume ? store.musicVolume : 0.8)
 
 // 播放列表数据
-const musicListShow = ref(false);
-const playerRef = ref(null);
+const musicListShow = ref(false)
+const playerRef = ref(null)
 const playerData = reactive({
   server: import.meta.env.VITE_SONG_SERVER,
   type: import.meta.env.VITE_SONG_TYPE,
-  id: import.meta.env.VITE_SONG_ID,
-});
+  id: import.meta.env.VITE_SONG_ID
+})
 
 // 开启播放列表
 const openMusicList = () => {
-  musicListShow.value = true;
-  playerRef.value.toggleList();
-};
+  musicListShow.value = true
+  playerRef.value.toggleList()
+}
 
 // 关闭播放列表
 const closeMusicList = () => {
-  musicListShow.value = false;
-  playerRef.value.toggleList();
-};
+  musicListShow.value = false
+  playerRef.value.toggleList()
+}
 
 // 音乐播放暂停
 const changePlayState = () => {
-  playerRef.value.playToggle();
-};
+  playerRef.value.playToggle()
+}
 
 // 音乐上下曲
 const changeMusicIndex = (type) => {
-  playerRef.value.changeSong(type);
-};
+  playerRef.value.changeSong(type)
+}
 
 onMounted(() => {
   // 空格键事件
-  window.addEventListener("keydown", (e) => {
+  window.addEventListener('keydown', (e) => {
     if (!store.musicIsOk) {
-      return;
+      return
     }
-    if (e.code == "Space") {
-      changePlayState();
+    if (e.code == 'Space') {
+      changePlayState()
     }
-  });
+  })
   // 挂载方法至 window
-  window.$openList = openMusicList;
-});
+  window.$openList = openMusicList
+})
 
 // 监听音量变化
 watch(
   () => volumeNum.value,
   (value) => {
-    store.musicVolume = value;
-    playerRef.value.changeVolume(store.musicVolume);
-  },
-);
+    store.musicVolume = value
+    playerRef.value.changeVolume(store.musicVolume)
+  }
+)
 </script>
 
 <style lang="scss" scoped>

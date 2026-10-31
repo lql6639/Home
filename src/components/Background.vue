@@ -1,10 +1,22 @@
 <template>
   <div :class="store.backgroundShow ? 'cover show' : 'cover'">
-    <img v-show="store.imgLoadStatus" :src="bgUrl" class="bg" alt="cover" @load="imgLoadComplete"
-      @error.once="imgLoadError" @animationend="imgAnimationEnd" />
+    <img
+      v-show="store.imgLoadStatus"
+      :src="bgUrl"
+      class="bg"
+      alt="cover"
+      @load="imgLoadComplete"
+      @error.once="imgLoadError"
+      @animationend="imgAnimationEnd"
+    />
     <div :class="store.backgroundShow ? 'gray hidden' : 'gray'" />
     <Transition name="fade" mode="out-in">
-      <a v-if="store.backgroundShow && store.coverType != '3'" class="down" :href="bgUrl" target="_blank">
+      <a
+        v-if="store.backgroundShow && store.coverType != '3'"
+        class="down"
+        :href="bgUrl"
+        target="_blank"
+      >
         下载壁纸
       </a>
     </Transition>
@@ -12,82 +24,82 @@
 </template>
 
 <script setup>
-import { mainStore } from "@/store";
-import { Error } from "@icon-park/vue-next";
+import { mainStore } from '@/store'
+import { Error } from '@icon-park/vue-next'
 
-const store = mainStore();
-const bgUrl = ref(null);
-const imgTimeout = ref(null);
-const emit = defineEmits(["loadComplete"]);
-const mainUrl = import.meta.env.VITE_EXTERNAL_BACKGROUND_URL;
+const store = mainStore()
+const bgUrl = ref(null)
+const imgTimeout = ref(null)
+const emit = defineEmits(['loadComplete'])
+const mainUrl = import.meta.env.VITE_EXTERNAL_BACKGROUND_URL
 
 // 壁纸随机数
 // 请依据文件夹内的图片个数修改 Math.random() 后面的第一个数字
-const bgRandom = Math.floor(Math.random() * 12 + 1);
+const bgRandom = Math.floor(Math.random() * 12 + 1)
 
 // 更换壁纸链接
 const changeBg = (type) => {
   if (type == 0) {
     if (mainUrl) {
-      bgUrl.value = mainUrl.replace('{bgrandom}', bgRandom);
+      bgUrl.value = mainUrl.replace('{bgrandom}', bgRandom)
     } else {
-      bgUrl.value = `/home-image/background${bgRandom}.jpg`;
+      bgUrl.value = `/home-image/background${bgRandom}.jpg`
     }
   } else if (type == 1) {
-    bgUrl.value = "https://bing.img.run/uhd.php";
+    bgUrl.value = 'https://bing.img.run/uhd.php'
   } else if (type == 2) {
-    bgUrl.value = "https://tu.ltyuanfang.cn/api/fengjing.php";
+    bgUrl.value = 'https://tu.ltyuanfang.cn/api/fengjing.php'
   } else if (type == 3) {
-    bgUrl.value = "https://api.imlazy.ink/img";
+    bgUrl.value = 'https://api.imlazy.ink/img'
   }
-};
+}
 
 // 图片加载完成
 const imgLoadComplete = () => {
   imgTimeout.value = setTimeout(
     () => {
-      store.setImgLoadStatus(true);
+      store.setImgLoadStatus(true)
     },
-    Math.floor(Math.random() * (600 - 300 + 1)) + 300,
-  );
-};
+    Math.floor(Math.random() * (600 - 300 + 1)) + 300
+  )
+}
 
 // 图片动画完成
 const imgAnimationEnd = () => {
-  console.log("壁纸加载且动画完成");
+  console.log('壁纸加载且动画完成')
   // 加载完成事件
-  emit("loadComplete");
-};
+  emit('loadComplete')
+}
 
 // 图片显示失败
 const imgLoadError = () => {
-  console.error("壁纸加载失败：", bgUrl.value);
+  console.error('壁纸加载失败：', bgUrl.value)
   ElMessage({
-    message: "壁纸加载失败，已临时切换回默认",
+    message: '壁纸加载失败，已临时切换回默认',
     icon: h(Error, {
-      theme: "filled",
-      fill: "#efefef",
-    }),
-  });
-  bgUrl.value = `/home-image/background${bgRandom}.jpg`;
-};
+      theme: 'filled',
+      fill: '#efefef'
+    })
+  })
+  bgUrl.value = `/home-image/background${bgRandom}.jpg`
+}
 
 // 监听壁纸切换
 watch(
   () => store.coverType,
   (value) => {
-    changeBg(value);
-  },
-);
+    changeBg(value)
+  }
+)
 
 onMounted(() => {
   // 加载壁纸
-  changeBg(store.coverType);
-});
+  changeBg(store.coverType)
+})
 
 onBeforeUnmount(() => {
-  clearTimeout(imgTimeout.value);
-});
+  clearTimeout(imgTimeout.value)
+})
 </script>
 
 <style lang="scss" scoped>
@@ -127,7 +139,8 @@ onBeforeUnmount(() => {
     top: 0;
     width: 100%;
     height: 100%;
-    background-image: radial-gradient(rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0.5) 100%),
+    background-image:
+      radial-gradient(rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0.5) 100%),
       radial-gradient(rgba(0, 0, 0, 0) 33%, rgba(0, 0, 0, 0.3) 166%);
 
     transition: 1.5s;

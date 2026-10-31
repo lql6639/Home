@@ -1,9 +1,10 @@
 import { ref } from 'vue'
 
 // 当前构建版本号（由 vite.config.js 通过 define 注入）
-const CURRENT_VERSION = typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : 'dev'
-// 每 5 分钟检查一次
-const CHECK_INTERVAL = 5 * 60 * 1000
+const CURRENT_VERSION =
+  typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : 'dev'
+// 每 30s 检查一次
+const CHECK_INTERVAL = 30 * 1000
 
 // 是否有新版本
 export const hasUpdate = ref(false)
@@ -16,7 +17,9 @@ let latestVersion = null
 // 拉取线上 version.json
 async function fetchRemoteVersion() {
   try {
-    const res = await fetch(`/version.json?t=${Date.now()}`, { cache: 'no-store' })
+    const res = await fetch(`/version.json?t=${Date.now()}`, {
+      cache: 'no-store'
+    })
     if (!res.ok) return null
     const data = await res.json()
     return data.version || null

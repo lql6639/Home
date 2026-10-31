@@ -4,7 +4,13 @@
     <!-- Logo -->
     <div class="logo">
       <img class="logo-img" :src="siteLogo" alt="logo" />
-      <div :class="{ name: true, 'text-hidden': true, long: siteUrl[0].length >= 6 }">
+      <div
+        :class="{
+          name: true,
+          'text-hidden': true,
+          long: siteUrl[0].length >= 6
+        }"
+      >
         <span class="bg">{{ siteUrl[0] }}</span>
         <span class="sm">.{{ siteUrl[1] }}</span>
         <span class="smm">.{{ siteUrl[2] }}</span>
@@ -29,61 +35,61 @@
 </template>
 
 <script setup>
-import { Icon } from "@vicons/utils";
-import { QuoteLeft, QuoteRight } from "@vicons/fa";
-import { Error } from "@icon-park/vue-next";
-import { mainStore } from "@/store";
-const store = mainStore();
+import { Icon } from '@vicons/utils'
+import { QuoteLeft, QuoteRight } from '@vicons/fa'
+import { Error } from '@icon-park/vue-next'
+import { mainStore } from '@/store'
+const store = mainStore()
 
 // 主页站点logo
-const siteLogo = import.meta.env.VITE_SITE_MAIN_LOGO;
+const siteLogo = import.meta.env.VITE_SITE_MAIN_LOGO
 // 站点链接
 const siteUrl = computed(() => {
-  const url = import.meta.env.VITE_SITE_URL;
-  if (!url) return "imsyy.top".split(".");
+  const url = import.meta.env.VITE_SITE_URL
+  if (!url) return 'imsyy.top'.split('.')
   // 判断协议前缀
-  if (url.startsWith("http://") || url.startsWith("https://")) {
-    const urlFormat = url.replace(/^(https?:\/\/)/, "");
-    return urlFormat.split(".");
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    const urlFormat = url.replace(/^(https?:\/\/)/, '')
+    return urlFormat.split('.')
   }
-  return url.split(".");
-});
+  return url.split('.')
+})
 
 // 简介区域文字
 const descriptionText = reactive({
   hello: import.meta.env.VITE_DESC_HELLO,
-  text: import.meta.env.VITE_DESC_TEXT,
-});
+  text: import.meta.env.VITE_DESC_TEXT
+})
 
 // 切换右侧功能区
 const changeBox = () => {
   if (store.getInnerWidth >= 990) {
-    store.boxOpenState = !store.boxOpenState;
+    store.boxOpenState = !store.boxOpenState
   } else {
     ElMessage({
-      message: "当前页面宽度不足以开启盒子",
+      message: '当前页面宽度不足以开启盒子',
       grouping: true,
       icon: h(Error, {
-        theme: "filled",
-        fill: "#efefef",
-      }),
-    });
+        theme: 'filled',
+        fill: '#efefef'
+      })
+    })
   }
-};
+}
 
 // 监听状态变化
 watch(
   () => store.boxOpenState,
   (value) => {
     if (value) {
-      descriptionText.hello = import.meta.env.VITE_DESC_HELLO_OTHER;
-      descriptionText.text = import.meta.env.VITE_DESC_TEXT_OTHER;
+      descriptionText.hello = import.meta.env.VITE_DESC_HELLO_OTHER
+      descriptionText.text = import.meta.env.VITE_DESC_TEXT_OTHER
     } else {
-      descriptionText.hello = import.meta.env.VITE_DESC_HELLO;
-      descriptionText.text = import.meta.env.VITE_DESC_TEXT;
+      descriptionText.hello = import.meta.env.VITE_DESC_HELLO
+      descriptionText.text = import.meta.env.VITE_DESC_TEXT
     }
-  },
-);
+  }
+)
 </script>
 
 <style lang="scss" scoped>
@@ -104,7 +110,7 @@ watch(
       width: 100%;
       padding-left: 22px;
       transform: translateY(-8px);
-      font-family: "Pacifico-Regular";
+      font-family: 'Pacifico-Regular';
 
       .bg {
         font-size: 5rem;
@@ -160,7 +166,7 @@ watch(
 
         p {
           &:nth-of-type(1) {
-            font-family: "Pacifico-Regular";
+            font-family: 'Pacifico-Regular';
           }
         }
       }

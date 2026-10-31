@@ -1,8 +1,19 @@
 <template>
-  <div class="set" @mouseenter="closeShow = true" @mouseleave="closeShow = false" @click.stop>
+  <div
+    class="set"
+    @mouseenter="closeShow = true"
+    @mouseleave="closeShow = false"
+    @click.stop
+  >
     <transition name="el-fade-in-linear">
-      <close-one class="close" theme="filled" size="28" fill="#ffffff60" v-show="closeShow"
-        @click="store.setOpenState = false" />
+      <close-one
+        class="close"
+        theme="filled"
+        size="28"
+        fill="#ffffff60"
+        v-show="closeShow"
+        @click="store.setOpenState = false"
+      />
     </transition>
     <el-row :gutter="40">
       <el-col :span="12" class="left">
@@ -13,8 +24,17 @@
         </div>
         <div class="version">
           <div class="num">v&nbsp;{{ config.version }}</div>
-          <el-tooltip content="Github 源代码仓库" placement="right" :show-arrow="false">
-            <github-one class="github" theme="outline" size="24" @click="jumpTo(config.github)" />
+          <el-tooltip
+            content="Github 源代码仓库"
+            placement="right"
+            :show-arrow="false"
+          >
+            <github-one
+              class="github"
+              theme="outline"
+              size="24"
+              @click="jumpTo(config.github)"
+            />
           </el-tooltip>
         </div>
         <el-card class="update">
@@ -47,41 +67,52 @@
 </template>
 
 <script setup>
-import { CloseOne, SettingTwo, GithubOne, AddOne, Bug } from "@icon-park/vue-next";
-import { mainStore } from "@/store";
-import Set from "@/components/Set.vue";
-import config from "@/../package.json";
+import {
+  CloseOne,
+  SettingTwo,
+  GithubOne,
+  AddOne,
+  Bug
+} from '@icon-park/vue-next'
+import { mainStore } from '@/store'
+import Set from '@/components/Set.vue'
+import config from '@/../package.json'
 
-const store = mainStore();
-const closeShow = ref(false);
+const store = mainStore()
+const closeShow = ref(false)
 
 // 站点链接
 const siteUrl = computed(() => {
-  const url = import.meta.env.VITE_SITE_URL;
-  if (!url) return "imsyy.top".split(".");
+  const url = import.meta.env.VITE_SITE_URL
+  if (!url) return 'imsyy.top'.split('.')
   // 判断协议前缀
-  if (url.startsWith("http://") || url.startsWith("https://")) {
-    const urlFormat = url.replace(/^(https?:\/\/)/, "");
-    return urlFormat.split(".");
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    const urlFormat = url.replace(/^(https?:\/\/)/, '')
+    return urlFormat.split('.')
   }
-  return url.split(".");
-});
+  return url.split('.')
+})
 
 // 更新日志
 const upData = reactive({
   new: [
-    "使用 Vue 进行重构",
-    "壁纸支持个性化设置",
-    "音乐播放器支持音量控制",
-    "音乐歌单支持快速自定义",
+    '使用 Vue 进行重构',
+    '壁纸支持个性化设置',
+    '音乐播放器支持音量控制',
+    '音乐歌单支持快速自定义'
   ],
-  fix: ["修改天气 API", "图标更换为 Icon", "时光胶囊显示错误", "移动端动画及细节"],
-});
+  fix: [
+    '修改天气 API',
+    '图标更换为 Icon',
+    '时光胶囊显示错误',
+    '移动端动画及细节'
+  ]
+})
 
 // 跳转源代码仓库
 const jumpTo = (url) => {
-  window.open(url);
-};
+  window.open(url)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -127,7 +158,7 @@ const jumpTo = (url) => {
 
       .logo {
         transform: translateY(-8%);
-        font-family: "Pacifico-Regular";
+        font-family: 'Pacifico-Regular';
         padding-left: 22px;
         width: 100%;
         height: 200px;
@@ -155,7 +186,7 @@ const jumpTo = (url) => {
 
         .num {
           font-size: 2rem;
-          font-family: "Pacifico-Regular";
+          font-family: 'Pacifico-Regular';
         }
 
         .github {

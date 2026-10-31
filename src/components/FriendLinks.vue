@@ -1,5 +1,10 @@
 <template>
-  <button class="friends-entry" type="button" aria-haspopup="dialog" @click="openFriends">
+  <button
+    class="friends-entry"
+    type="button"
+    aria-haspopup="dialog"
+    @click="openFriends"
+  >
     <span class="entry-icon" aria-hidden="true">♧</span>
     <span class="entry-copy">
       <strong>友情链接</strong>
@@ -9,24 +14,46 @@
   </button>
 
   <Teleport to="body">
-    <dialog ref="friendsDialog" class="friends-dialog" aria-labelledby="friends-title" @click="closeOnBackdrop">
+    <dialog
+      ref="friendsDialog"
+      class="friends-dialog"
+      aria-labelledby="friends-title"
+      @click="closeOnBackdrop"
+    >
       <div class="friends-panel">
         <div class="panel-head">
           <div>
             <div class="eyebrow">FRIENDS &amp; NEIGHBORS</div>
             <h2 id="friends-title">友情链接</h2>
           </div>
-          <button class="close" type="button" aria-label="关闭友情链接" @click="friendsDialog.close()">
+          <button
+            class="close"
+            type="button"
+            aria-label="关闭友情链接"
+            @click="friendsDialog.close()"
+          >
             ×
           </button>
         </div>
         <p class="subtitle">互联网很大，很高兴在这里遇见你。</p>
         <p class="section-label">去朋友的小站坐坐</p>
         <div class="friends-list">
-          <a v-for="friend in friendLinks" :key="friend.url" class="friend" :href="friend.url" target="_blank"
-            rel="noopener noreferrer">
-            <img class="avatar" :class="{ 'avatar-logo': friend.logo }" :src="friend.avatar" alt="" width="45"
-              height="45" />
+          <a
+            v-for="friend in friendLinks"
+            :key="friend.url"
+            class="friend"
+            :href="friend.url"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              class="avatar"
+              :class="{ 'avatar-logo': friend.logo }"
+              :src="friend.avatar"
+              alt=""
+              width="45"
+              height="45"
+            />
             <div class="friend-copy">
               <h3>{{ friend.name }}</h3>
               <p>{{ friend.description }}</p>
@@ -40,24 +67,24 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import friendLinks from "@/assets/friendLinks.json";
+import { ref } from 'vue'
+import friendLinks from '@/assets/friendLinks.json'
 
-const friendsDialog = ref(null);
-const openFriends = () => friendsDialog.value.showModal();
+const friendsDialog = ref(null)
+const openFriends = () => friendsDialog.value.showModal()
 const closeOnBackdrop = (event) => {
-  const dialog = friendsDialog.value;
-  if (event.target !== dialog) return;
-  const rect = dialog.getBoundingClientRect();
+  const dialog = friendsDialog.value
+  if (event.target !== dialog) return
+  const rect = dialog.getBoundingClientRect()
   if (
     event.clientX < rect.left ||
     event.clientX > rect.right ||
     event.clientY < rect.top ||
     event.clientY > rect.bottom
   ) {
-    dialog.close();
+    dialog.close()
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -292,7 +319,6 @@ const closeOnBackdrop = (event) => {
 }
 
 @media (prefers-reduced-motion: reduce) {
-
   .friends-entry,
   .friends-dialog,
   .friends-dialog * {

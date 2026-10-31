@@ -15,12 +15,12 @@
 </template>
 
 <script setup>
-import { mainStore } from "@/store";
+import { mainStore } from '@/store'
 
-const store = mainStore();
+const store = mainStore()
 
 // 配置
-const siteName = import.meta.env.VITE_SITE_NAME;
+const siteName = import.meta.env.VITE_SITE_NAME
 </script>
 
 <style lang="scss" scoped>
@@ -54,7 +54,7 @@ const siteName = import.meta.env.VITE_SITE_NAME;
       z-index: 2;
 
       &:before {
-        content: "";
+        content: '';
         position: absolute;
         top: 5px;
         left: 5px;
@@ -67,7 +67,7 @@ const siteName = import.meta.env.VITE_SITE_NAME;
       }
 
       &:after {
-        content: "";
+        content: '';
         position: absolute;
         top: 15px;
         left: 15px;
@@ -122,7 +122,6 @@ const siteName = import.meta.env.VITE_SITE_NAME;
       visibility 0.3s 1s ease-out;
 
     .loader {
-
       .loader-circle,
       .loader-text {
         opacity: 0;

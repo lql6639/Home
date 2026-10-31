@@ -1,12 +1,28 @@
 <template>
-  <div class="box cards" @mouseenter="closeShow = true" @mouseleave="closeShow = false">
+  <div
+    class="box cards"
+    @mouseenter="closeShow = true"
+    @mouseleave="closeShow = false"
+  >
     <transition name="el-fade-in-linear">
-      <close-one class="close" theme="filled" size="28" fill="#ffffff60" v-show="closeShow"
-        @click="store.boxOpenState = false" />
+      <close-one
+        class="close"
+        theme="filled"
+        size="28"
+        fill="#ffffff60"
+        v-show="closeShow"
+        @click="store.boxOpenState = false"
+      />
     </transition>
     <transition name="el-fade-in-linear">
-      <setting-two class="setting" theme="filled" size="28" fill="#ffffff60" v-show="closeShow"
-        @click="store.setOpenState = true" />
+      <setting-two
+        class="setting"
+        theme="filled"
+        size="28"
+        fill="#ffffff60"
+        v-show="closeShow"
+        @click="store.setOpenState = true"
+      />
     </transition>
     <div class="content">
       <!-- 可在此处自定义任意内容 -->
@@ -17,13 +33,13 @@
 </template>
 
 <script setup>
-import { CloseOne, SettingTwo } from "@icon-park/vue-next";
-import { mainStore } from "@/store";
-import TimeCapsule from "@/components/TimeCapsule.vue";
-import MoreContent from "@/components/MoreContent.vue";
+import { CloseOne, SettingTwo } from '@icon-park/vue-next'
+import { mainStore } from '@/store'
+import TimeCapsule from '@/components/TimeCapsule.vue'
+import MoreContent from '@/components/MoreContent.vue'
 
-const store = mainStore();
-const closeShow = ref(false);
+const store = mainStore()
+const closeShow = ref(false)
 </script>
 
 <style lang="scss" scoped>

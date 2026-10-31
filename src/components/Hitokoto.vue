@@ -1,9 +1,18 @@
 <template>
-  <div class="hitokoto cards" v-show="!store.musicOpenState" @mouseenter="openMusicShow = true"
-    @mouseleave="openMusicShow = false" @click.stop>
+  <div
+    class="hitokoto cards"
+    v-show="!store.musicOpenState"
+    @mouseenter="openMusicShow = true"
+    @mouseleave="openMusicShow = false"
+    @click.stop
+  >
     <!-- 打开音乐面板 -->
     <Transition name="el-fade-in-linear">
-      <div class="open-music" v-show="openMusicShow && store.musicIsOk" @click="store.musicOpenState = true">
+      <div
+        class="open-music"
+        v-show="openMusicShow && store.musicIsOk"
+        @click="store.musicOpenState = true"
+      >
         <music-menu theme="filled" size="18" fill="#efefef" />
         <span>打开音乐播放器</span>
       </div>
@@ -19,52 +28,52 @@
 </template>
 
 <script setup>
-import { MusicMenu, Error } from "@icon-park/vue-next";
-import { getHitokoto } from "@/api";
-import { mainStore } from "@/store";
-import debounce from "@/utils/debounce.js";
+import { MusicMenu, Error } from '@icon-park/vue-next'
+import { getHitokoto } from '@/api'
+import { mainStore } from '@/store'
+import debounce from '@/utils/debounce.js'
 
-const store = mainStore();
+const store = mainStore()
 
 // 开启音乐面板按钮显隐
-const openMusicShow = ref(false);
+const openMusicShow = ref(false)
 
 // 一言数据
 const hitokotoData = reactive({
-  text: "这里应该显示一句话",
-  from: "mifeng",
-});
+  text: '这里应该显示一句话',
+  from: 'mifeng'
+})
 
 // 获取一言数据
 const getHitokotoData = async () => {
   try {
-    const result = await getHitokoto();
-    hitokotoData.text = result.hitokoto;
-    hitokotoData.from = result.from;
+    const result = await getHitokoto()
+    hitokotoData.text = result.hitokoto
+    hitokotoData.from = result.from
   } catch (error) {
     ElMessage({
-      message: "一言获取失败",
+      message: '一言获取失败',
       icon: h(Error, {
-        theme: "filled",
-        fill: "#efefef",
-      }),
-    });
-    hitokotoData.text = "这里应该显示一句话";
-    hitokotoData.from = "mifeng";
+        theme: 'filled',
+        fill: '#efefef'
+      })
+    })
+    hitokotoData.text = '这里应该显示一句话'
+    hitokotoData.from = 'mifeng'
   }
-};
+}
 
 // 更新一言数据
 const updateHitokoto = () => {
   // 防抖
   debounce(() => {
-    getHitokotoData();
-  }, 500);
-};
+    getHitokotoData()
+  }, 500)
+}
 
 onMounted(() => {
-  getHitokotoData();
-});
+  getHitokotoData()
+})
 </script>
 
 <style lang="scss" scoped>

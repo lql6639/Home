@@ -18,7 +18,11 @@
               <span class="sm-hidden">{{ currentTime.weekday }}</span>
             </div>
             <div class="text">
-              <span> {{ currentTime.hour }}:{{ currentTime.minute }}:{{ currentTime.second }}</span>
+              <span>
+                {{ currentTime.hour }}:{{ currentTime.minute }}:{{
+                  currentTime.second
+                }}</span
+              >
             </div>
           </div>
           <Weather />
@@ -29,34 +33,34 @@
 </template>
 
 <script setup>
-import { getCurrentTime } from "@/utils/getTime";
-import { mainStore } from "@/store";
-import Music from "@/components/Music.vue";
-import Hitokoto from "@/components/Hitokoto.vue";
-import Weather from "@/components/Weather.vue";
+import { getCurrentTime } from '@/utils/getTime'
+import { mainStore } from '@/store'
+import Music from '@/components/Music.vue'
+import Hitokoto from '@/components/Hitokoto.vue'
+import Weather from '@/components/Weather.vue'
 
-const store = mainStore();
+const store = mainStore()
 
 // 当前时间
-const currentTime = ref({});
-const timeInterval = ref(null);
+const currentTime = ref({})
+const timeInterval = ref(null)
 
 // 播放器 id
-const playerHasId = import.meta.env.VITE_SONG_ID;
+const playerHasId = import.meta.env.VITE_SONG_ID
 
 // 更新时间
 const updateTimeData = () => {
-  currentTime.value = getCurrentTime();
-};
+  currentTime.value = getCurrentTime()
+}
 
 onMounted(() => {
-  updateTimeData();
-  timeInterval.value = setInterval(updateTimeData, 1000);
-});
+  updateTimeData()
+  timeInterval.value = setInterval(updateTimeData, 1000)
+})
 
 onBeforeUnmount(() => {
-  clearInterval(timeInterval.value);
-});
+  clearInterval(timeInterval.value)
+})
 </script>
 
 <style lang="scss" scoped>
@@ -137,7 +141,7 @@ onBeforeUnmount(() => {
           margin-top: -10px;
           font-size: 3.25rem;
           letter-spacing: 2px;
-          font-family: "Pacifico-Regular";
+          font-family: 'Pacifico-Regular';
         }
       }
 

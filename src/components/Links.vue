@@ -7,17 +7,33 @@
       <span class="title">网站列表</span>
     </div>
     <!-- 网站列表 -->
-    <Swiper v-if="siteLinks[0]" :modules="modules" :slides-per-view="1" :space-between="40" :pagination="{
-      el: '.swiper-pagination',
-      clickable: true,
-      bulletElement: 'div',
-    }" :mousewheel="true">
+    <Swiper
+      v-if="siteLinks[0]"
+      :modules="modules"
+      :slides-per-view="1"
+      :space-between="40"
+      :pagination="{
+        el: '.swiper-pagination',
+        clickable: true,
+        bulletElement: 'div'
+      }"
+      :mousewheel="true"
+    >
       <SwiperSlide v-for="site in siteLinksList" :key="site">
         <el-row class="link-all" :gutter="20">
           <el-col v-for="(item, index) in site" :span="8" :key="item">
-            <div class="item cards" :style="index < 3 ? 'margin-bottom: 20px' : null" @click="jumpLink(item)">
+            <div
+              class="item cards"
+              :style="index < 3 ? 'margin-bottom: 20px' : null"
+              @click="jumpLink(item)"
+            >
               <template v-if="item.iconUrl">
-                <img class="icon-img" :src="item.iconUrl" width="26" height="26" />
+                <img
+                  class="icon-img"
+                  :src="item.iconUrl"
+                  width="26"
+                  height="26"
+                />
               </template>
               <template v-else>
                 <Icon size="26">
@@ -35,31 +51,45 @@
 </template>
 
 <script setup>
-import { Icon } from "@vicons/utils";
-import { computed, onMounted } from 'vue';
+import { Icon } from '@vicons/utils'
+import { computed, onMounted } from 'vue'
 // 可前往 https://www.xicons.org 自行挑选并在此处引入
-import { Link, Blog, Server, CompactDisc, Cloud, Compass, Toolbox, Fire, LaptopCode, Lock, Code, Cloudflare, Heart } from "@vicons/fa"; // 注意使用正确的类别
-import { mainStore } from "@/store";
-import { Swiper, SwiperSlide } from "swiper/vue";
+import {
+  Link,
+  Blog,
+  Server,
+  CompactDisc,
+  Cloud,
+  Compass,
+  Toolbox,
+  Fire,
+  LaptopCode,
+  Lock,
+  Code,
+  Cloudflare,
+  Heart
+} from '@vicons/fa' // 注意使用正确的类别
+import { mainStore } from '@/store'
+import { Swiper, SwiperSlide } from 'swiper/vue'
 // Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/pagination';
+import 'swiper/css'
+import 'swiper/css/pagination'
 // Import required modules
-import { Pagination, Mousewheel } from 'swiper/modules';
-import siteLinks from "@/assets/siteLinks.json";
+import { Pagination, Mousewheel } from 'swiper/modules'
+import siteLinks from '@/assets/siteLinks.json'
 
-const store = mainStore();
-const modules = [Pagination, Mousewheel];
+const store = mainStore()
+const modules = [Pagination, Mousewheel]
 
 // 计算网站链接
 const siteLinksList = computed(() => {
-  const result = [];
+  const result = []
   for (let i = 0; i < siteLinks.length; i += 6) {
-    const subArr = siteLinks.slice(i, i + 6);
-    result.push(subArr);
+    const subArr = siteLinks.slice(i, i + 6)
+    result.push(subArr)
   }
-  return result;
-});
+  return result
+})
 
 // 网站链接图标
 const siteIcon = {
@@ -74,21 +104,21 @@ const siteIcon = {
   Lock,
   LaptopCode,
   Code,
-  Cloudflare,
-};
+  Cloudflare
+}
 
 // 链接跳转
 const jumpLink = (data) => {
-  if (data.name === "Hot" && store.musicClick) {
-    if (typeof $openList === "function") $openList();
+  if (data.name === 'Hot' && store.musicClick) {
+    if (typeof $openList === 'function') $openList()
   } else {
-    window.open(data.link, "_blank");
+    window.open(data.link, '_blank')
   }
-};
+}
 
 onMounted(() => {
-  console.log(siteLinks);
-});
+  console.log(siteLinks)
+})
 </script>
 
 <style lang="scss" scoped>
