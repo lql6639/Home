@@ -20,8 +20,8 @@
     "preview": "vite preview",
     "format": "prettier --write src/",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts,.vue --fix",
-    "visualizer": "vite-bundle-visualizer",
-    "analyze": "vite build --mode analyze"
+    "analyze": "vite build --mode analyze",
+    "visualizer": "vite-bundle-visualizer"
   },
   "dependencies": {
     "@worstone/vue-aplayer": "^1.0.6",
