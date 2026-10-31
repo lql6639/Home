@@ -105,7 +105,8 @@ export default ({ mode }) =>
         }
       }),
       viteCompression(),
-      analyzer(),
+      // 仅在 `vite build --mode analyze` 时启用，避免日常构建被交互式分析器阻塞
+      ...(mode === 'analyze' ? [analyzer()] : []),
       versionFile()
     ],
     define: {
