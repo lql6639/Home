@@ -9,6 +9,22 @@ import Components from 'unplugin-vue-components/vite'
 import viteCompression from 'vite-plugin-compression'
 import { analyzer } from 'vite-bundle-analyzer'
 
+// 构建版本号：每次构建都不同，用于前端检测新版本
+const buildVersion = Date.now().toString(36)
+
+// 构建后输出 version.json，供前端轮询比对
+const versionFile = () => ({
+  name: 'emit-version-file',
+  apply: 'build',
+  generateBundle() {
+    this.emitFile({
+      type: 'asset',
+      fileName: 'version.json',
+      source: JSON.stringify({ version: buildVersion, buildTime: new Date().toISOString() })
+    })
+  }
+})
+
 // https://vitejs.dev/config/
 export default ({ mode }) =>
   defineConfig({
@@ -89,8 +105,12 @@ export default ({ mode }) =>
         }
       }),
       viteCompression(),
-      analyzer()
+      analyzer(),
+      versionFile()
     ],
+    define: {
+      __APP_VERSION__: JSON.stringify(buildVersion)
+    },
     server: {
       port: '3000',
       open: true
