@@ -1,5 +1,11 @@
 [
   {
+    "icon": "Fire",
+    "iconUrl": "",
+    "name": "Hot",
+    "link": "javascript:;"
+  },
+  {
     "icon": "Heart",
     "iconUrl": "",
     "name": "Love",
@@ -12,27 +18,21 @@
     "link": "https://music.lovlin.eu.cc"
   },
   {
-    "icon": "Lock",
+    "icon": "Link",
     "iconUrl": "",
-    "name": "API",
-    "link": "https://api.lovlin.eu.cc"
-  },
-  {
-    "icon": "Fire",
-    "iconUrl": "",
-    "name": "Hot",
-    "link": "javascript:;"
-  },
-  {
-    "icon": "LaptopCode",
-    "iconUrl": "",
-    "name": "Site",
-    "link": "javascript:;"
+    "name": "Link",
+    "link": "https://link.lovlin.eu.cc"
   },
   {
     "icon": "Cloud",
     "iconUrl": "",
-    "name": "OpenList",
-    "link": "javascript:;"
+    "name": "Cloud",
+    "link": "https://cloud.lovlin.eu.cc"
+  },
+  {
+    "icon": "Code",
+    "iconUrl": "",
+    "name": "API",
+    "link": "https://api.lovlin.eu.cc"
   }
 ]
