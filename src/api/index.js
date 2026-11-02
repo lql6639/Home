@@ -66,9 +66,7 @@ const isTemperature = (value) =>
 
 // 获取地理位置信息
 export const getAdcode = async () => {
-  const res = await fetch(
-    `https://api.songzixian.com/api/ip?dataSource=GLOBAL_IP`
-  )
+  const res = await fetch(`https://api.lovlin.eu.cc/v1/ipinfo`)
   if (!res.ok) {
     throw new Error('地区请求失败')
   }
