@@ -46,10 +46,6 @@ const changeBg = (type) => {
       bgUrl.value = `/home-image/background${bgRandom}.jpg`
     }
   } else if (type == 1) {
-    bgUrl.value = 'https://bing.img.run/uhd.php'
-  } else if (type == 2) {
-    bgUrl.value = 'https://tu.ltyuanfang.cn/api/fengjing.php'
-  } else if (type == 3) {
     bgUrl.value = 'https://api.imlazy.ink/img'
   }
 }
