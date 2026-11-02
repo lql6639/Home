@@ -58,11 +58,11 @@ import {
   Fire,
   Heart,
   CompactDisc,
-  Link,
-  Cloud,
   Code,
+  Cloud,
+  Lock,
   Blog,
-  Lock
+  Link
 } from '@vicons/fa' // 注意使用正确的类别
 import { mainStore } from '@/store'
 import { Swiper, SwiperSlide } from 'swiper/vue'
@@ -91,11 +91,11 @@ const siteIcon = {
   Fire,
   Heart,
   CompactDisc,
-  Link,
-  Cloud,
   Code,
+  Cloud,
+  Lock,
   Blog,
-  Lock
+  Link
 }
 
 // 链接跳转
