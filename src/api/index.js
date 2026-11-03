@@ -75,7 +75,7 @@ export const getAdcode = async () => {
 }
 
 export const getWeather = async () => {
-  const res = await fetch('https://api.mfawa.top/v1/weather/realtime')
+  const res = await fetch('https://api.lovlin.eu.cc/v1/weather/realtime')
   if (!res.ok) {
     throw new Error('MIFENG 天气请求失败')
   }
