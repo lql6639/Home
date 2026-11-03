@@ -34,7 +34,7 @@ const weatherData = reactive({
   }
 })
 
-const formatMifengWeather = (realtime) => ({
+const formatWeather = (realtime) => ({
   city: realtime.city,
   data: {
     type: realtime.weather,
@@ -91,10 +91,10 @@ const clearWeatherData = () => {
 const getWeatherData = async () => {
   try {
     const result = await getWeather()
-    updateWeatherData(formatMifengWeather(result.data.realtime))
+    updateWeatherData(formatWeather(result.data.realtime))
   } catch {
     const weatherRequests = [
-      getWeather().then((result) => formatMifengWeather(result.data.realtime))
+      getWeather().then((result) => formatWeather(result.data.realtime))
     ]
 
     if (mainKey) {
