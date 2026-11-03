@@ -77,7 +77,7 @@ export const getAdcode = async () => {
 export const getWeather = async () => {
   const res = await fetch('https://api.lovlin.eu.cc/v1/weather/realtime')
   if (!res.ok) {
-    throw new Error('MIFENG 天气请求失败')
+    throw new Error('天气请求失败')
   }
 
   const data = await res.json()
@@ -91,22 +91,22 @@ export const getWeather = async () => {
     !isNonEmptyString(realtime.wind) ||
     !isNonEmptyString(realtime.windSpeed)
   ) {
-    throw new Error('MIFENG 天气数据无效')
+    throw new Error('天气数据无效')
   }
 
   return data
 }
 
 // 获取高德地理天气信息
-export const getOtherWeather = async (key, city) => {
+export const getAmapWeather = async (key, city) => {
   if (!isNonEmptyString(key) || !isNonEmptyString(city)) {
     throw new Error('高德天气请求参数无效')
   }
 
-  const encodedKey = encodeURIComponent(key.trim())
-  const encodedCity = encodeURIComponent(city.trim())
+  const Key = encodeURIComponent(key.trim())
+  const City = encodeURIComponent(city.trim())
   const res = await fetch(
-    `https://restapi.amap.com/v3/weather/weatherInfo?key=${encodedKey}&city=${encodedCity}`
+    `https://restapi.amap.com/v3/weather/weatherInfo?city=${City}&key=${Key}&extensions=base`
   )
   if (!res.ok) {
     throw new Error('高德天气请求失败')

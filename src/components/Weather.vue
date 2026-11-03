@@ -17,7 +17,7 @@
 import { h } from 'vue'
 import { Error as ErrorIcon } from '@icon-park/vue-next'
 import { ElMessage } from 'element-plus'
-import { getAdcode, getWeather, getOtherWeather } from '@/api'
+import { getAdcode, getWeather, getAmapWeather } from '@/api'
 
 // 高德开发者 Key
 const mainKey = import.meta.env.VITE_WEATHER_KEY?.trim()
@@ -48,16 +48,12 @@ const formatWeather = (realtime) => ({
 const getAmapWeatherData = async () => {
   const locationData = await getAdcode()
   const city = locationData?.data?.city
-  if (
-    locationData?.code !== 200 ||
-    typeof city !== 'string' ||
-    city.trim() === ''
-  ) {
+  if (typeof city !== 'string' || city.trim() === '') {
     throw new Error('地区查询失败')
   }
 
   const normalizedCity = city.trim()
-  const result = await getOtherWeather(mainKey, normalizedCity)
+  const result = await getAmapWeather(mainKey, normalizedCity)
   const weather = result.lives[0]
   return {
     city: normalizedCity,
