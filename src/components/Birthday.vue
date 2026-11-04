@@ -1,7 +1,16 @@
 <template>
+  <!-- 生日当天的底部祝福条：蛋糕关掉后一直留在这里，点按钮可以再看一次 -->
+  <Transition name="slide-up">
+    <div v-if="tipVisible" class="birthday-tip">
+      <div class="dot" />
+      <span class="text">收到一份生日祝福</span>
+      <button class="btn primary" type="button" @click="openCake">接收</button>
+    </div>
+  </Transition>
+
   <!-- alive 为 false 时整块 DOM 被移除，canvas 显存随之释放 -->
   <Transition v-if="alive" name="birthday-fade" @after-leave="destroy">
-    <div v-if="visible" class="birthday" @click.self="close">
+    <div v-if="visible" class="birthday">
       <canvas ref="canvasRef" class="cake-canvas" aria-hidden="true" />
 
       <div class="wish">
@@ -15,15 +24,16 @@
 </template>
 
 <script setup>
+import { h } from 'vue'
 import { isBirthday } from '@/utils/time.js'
+import { GithubOne } from '@icon-park/vue-next'
 
 const canvasRef = ref(null)
 const visible = ref(false)
 // 关闭动画结束后置为 false，把整个组件从页面上摘掉
 const alive = ref(true)
-
-// 关掉后本次会话内不再打扰，刷新或新开标签页才会重新出现
-const DISMISS_KEY = 'birthday-dismissed'
+// 生日提示条
+const tipVisible = ref(false)
 
 // ---- 常量 ----
 const TAU = Math.PI * 2
@@ -75,6 +85,15 @@ let particles = []
 let orbiters = []
 let embers = []
 let reducedMotion = false
+// 跨到第二天 0 点时重新判断一次
+let midnightTimer = 0
+// 当天 23:30 弹告别提示，次日 00:15 提示自动消失（不刷新页面）
+const FAREWELL_HOUR = 23
+const FAREWELL_MINUTE = 30
+const FAREWELL_END_HOUR = 0
+const FAREWELL_END_MINUTE = 15
+let farewellTimer = 0
+let farewellStarted = false
 // 静态辉光预渲染，避免每帧重建两个全屏径向渐变
 let backdrop = null
 
@@ -467,15 +486,122 @@ const release = () => {
   ctx = null
 }
 
-const close = () => {
+// 收掉蛋糕画面：keepMusic 为 true 时只收画面，生日歌继续放（当天结束用）
+const hideCake = (keepMusic) => {
   if (!visible.value) return
   visible.value = false
-  sessionStorage.setItem(DISMISS_KEY, '1')
 
   // 停掉动画（画布保留最后一帧，靠 CSS 过渡淡出）并立刻交还 CPU
   release()
-  // 通知花瓣特效恢复
-  window.dispatchEvent(new Event('birthday:hide'))
+  // 通知花瓣特效恢复；keepMusic 时播放器不还原歌单
+  window.dispatchEvent(
+    new CustomEvent('birthday:hide', { detail: { keepMusic } })
+  )
+}
+
+const close = () => {
+  if (!visible.value) return
+  hideCake(false)
+  // 关掉后底部祝福一直保留到今天结束
+  tipVisible.value = isBirthday()
+}
+
+// 打开蛋糕：进页面、跨到零点、点「再看一次」都走这里
+const openCake = () => {
+  if (visible.value) return
+  tipVisible.value = false
+  // after-leave 里会把 alive 置 false（整块 DOM 已摘掉），重新打开时要先挂回来
+  alive.value = true
+  visible.value = true
+  reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  // destroy 里解除过监听，重新打开时要补回来
+  addListeners()
+
+  nextTick(() => {
+    resize()
+    start()
+  })
+
+  // 花瓣特效暂停，播放器换生日歌，都听这个事件
+  window.dispatchEvent(new Event('birthday:show'))
+}
+
+// 当天是生日就直接放蛋糕；过了当天只收蛋糕和祝福条，生日歌留着
+const checkToday = () => {
+  if (isBirthday()) {
+    openCake()
+    return
+  }
+  // 过了当天：祝福条一定收掉（否则页面整夜开着会留着昨天的祝福）
+  tipVisible.value = false
+  // 蛋糕收掉，但歌可以继续听；真正的清空在 00:15 刷新时
+  hideCake(true)
+}
+
+// 到次日 00:15 的剩余毫秒：提示挂到这一刻自动消失
+const msUntilFarewellEnd = () => {
+  const now = new Date()
+  const at = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() + 1,
+    FAREWELL_END_HOUR,
+    FAREWELL_END_MINUTE,
+    2
+  ).getTime()
+  return Math.max(1500, at - now.getTime())
+}
+
+// 23:30 弹两条告别提示：一直挂到次日 00:15，零点撤蛋糕时屏幕上不至于空场
+const startFarewell = () => {
+  if (farewellStarted) return
+  farewellStarted = true
+
+  const left = msUntilFarewellEnd()
+  ElMessage({
+    message: '结束寄语',
+    duration: left,
+    icon: h(GithubOne, { theme: 'filled', fill: '#efefef' })
+  })
+  ElMessage({
+    message: '希望你带着新的祝福开始新的一岁',
+    duration: left,
+    icon: h(GithubOne, { theme: 'filled', fill: '#efefef' })
+  })
+}
+
+// 到 23:30 弹提示；23:30 之后才进来的直接弹
+const scheduleFarewell = () => {
+  if (!isBirthday()) return
+  const now = new Date()
+  const at = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    FAREWELL_HOUR,
+    FAREWELL_MINUTE,
+    0
+  ).getTime()
+  const delay = at - now.getTime()
+  if (delay <= 0) startFarewell()
+  else farewellTimer = setTimeout(startFarewell, delay)
+}
+
+// 页面一直开着时，跨到 0 点重新判断一次：到点自动放蛋糕，过了当天自动收掉
+const scheduleMidnight = () => {
+  const now = new Date()
+  const next = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() + 1,
+    0,
+    0,
+    2
+  )
+  midnightTimer = setTimeout(() => {
+    checkToday()
+    scheduleMidnight()
+  }, next.getTime() - now.getTime())
 }
 
 const onVisibility = () => {
@@ -494,14 +620,30 @@ const onKeydown = (e) => {
   if (e.key === 'Escape') close()
 }
 
+// 播放器挂载比这里晚（它在壁纸加载完才进 DOM），挂载后会来问一次当前要不要放生日歌
+const onQuery = () => {
+  if (visible.value) window.dispatchEvent(new Event('birthday:show'))
+}
+
+// 重复调用无副作用：同一个函数引用只会注册一次
+const addListeners = () => {
+  window.addEventListener('resize', onResize)
+  window.addEventListener('keydown', onKeydown)
+  window.addEventListener('birthday:query', onQuery)
+  document.addEventListener('visibilitychange', onVisibility)
+}
+
 const removeListeners = () => {
   window.removeEventListener('resize', onResize)
   window.removeEventListener('keydown', onKeydown)
+  window.removeEventListener('birthday:query', onQuery)
   document.removeEventListener('visibilitychange', onVisibility)
 }
 
 // 淡出结束后真正卸载：摘掉 DOM、解除监听、释放 canvas 显存
 const destroy = () => {
+  // 淡出途中又被「再看一次」打开时不能卸载
+  if (visible.value) return
   release()
   removeListeners()
   canvasRef.value = null
@@ -512,26 +654,15 @@ const destroy = () => {
 }
 
 onMounted(() => {
-  if (!isBirthday()) return
-  if (sessionStorage.getItem(DISMISS_KEY)) return
-
-  visible.value = true
-  reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-  nextTick(() => {
-    resize()
-    start()
-  })
-
-  // 通知花瓣特效暂停，避免两个 canvas 循环同时跑
-  window.dispatchEvent(new Event('birthday:show'))
-
-  window.addEventListener('resize', onResize)
-  window.addEventListener('keydown', onKeydown)
-  document.addEventListener('visibilitychange', onVisibility)
+  addListeners()
+  checkToday()
+  scheduleMidnight()
+  scheduleFarewell()
 })
 
 onBeforeUnmount(() => {
+  clearTimeout(midnightTimer)
+  clearTimeout(farewellTimer)
   release()
   removeListeners()
   window.dispatchEvent(new Event('birthday:hide'))
@@ -596,7 +727,7 @@ onBeforeUnmount(() => {
   .close {
     position: absolute;
     right: 1.5rem;
-    bottom: 1.5rem;
+    top: 1.5rem;
     padding: 0.45rem 1.1rem;
     font-family: inherit;
     font-size: 0.8rem;
@@ -619,9 +750,8 @@ onBeforeUnmount(() => {
     }
 
     .close {
-      right: 50%;
-      transform: translateX(50%);
-      bottom: 1.2rem;
+      right: 1rem;
+      top: 1rem;
     }
   }
 }
@@ -634,6 +764,84 @@ onBeforeUnmount(() => {
 .birthday-fade-enter-from,
 .birthday-fade-leave-to {
   opacity: 0;
+}
+
+/* 提示条：与 UpdateTip 同一套观感 */
+.birthday-tip {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(40, 40, 40, 0.86);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 6px 24px rgb(0 0 0 / 18%);
+  color: #fff;
+  font-size: 14px;
+  max-width: calc(100vw - 32px);
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #f4a759;
+    flex-shrink: 0;
+    box-shadow: 0 0 8px #f4a759;
+  }
+
+  .text {
+    flex-shrink: 0;
+  }
+
+  .btn {
+    padding: 4px 12px;
+    border: none;
+    border-radius: 8px;
+    background: rgb(255 255 255 / 14%);
+    color: #fff;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:hover {
+      background: rgb(255 255 255 / 24%);
+    }
+
+    &.primary {
+      background: #f4a759;
+
+      &:hover {
+        background: #ffbb78;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    bottom: 16px;
+    padding: 8px 12px;
+    gap: 8px;
+
+    .text {
+      font-size: 13px;
+    }
+  }
+}
+
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: all 0.3s ease;
+}
+
+.slide-up-enter-from,
+.slide-up-leave-to {
+  opacity: 0;
+  transform: translate(-50%, 20px);
 }
 
 @keyframes wish-in {

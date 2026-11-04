@@ -124,11 +124,24 @@ export const isBirthday = (date = new Date()) => {
 export const checkBirthday = () => {
   if (!isBirthday()) return
   const key = `${new Date().getMonth() + 1}.${new Date().getDate()}`
-  ElMessage({
+  const instance = ElMessage({
     message: `${birthday[key]}`,
-    duration: 30000,
+    // 0 = 不自动关闭，生日当天一直显示
+    duration: 0,
     icon: h(GithubOne, { theme: 'filled', fill: '#efefef' })
   })
+
+  // 过了当天（零点）自动收起，页面一直开着也不会留下前一天的祝福
+  const now = new Date()
+  const nextDay = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() + 1,
+    0,
+    0,
+    1
+  )
+  setTimeout(() => instance.close(), nextDay.getTime() - now.getTime())
 }
 
 // 默哀模式
@@ -149,7 +162,7 @@ export const getQingmingDay = (year = new Date().getFullYear()) => {
   return Math.floor(y * 0.2422 + c) - Math.floor(y / 4)
 }
 
-// 取当天对应的纪念日名称，没有则返回空字符串
+// 取当天对应的默哀名称，没有则返回空字符串
 const getAnniversaryName = (date = new Date()) => {
   const key = `${date.getMonth() + 1}.${date.getDate()}`
   if (Object.prototype.hasOwnProperty.call(anniversaries, key)) {

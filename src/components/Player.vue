@@ -34,6 +34,12 @@ const player = ref(null)
 // 歌曲播放列表
 const playList = ref([])
 
+// 接口真实拉回来的歌单。生日期间 playList 会被换成单曲，原列表靠它保住
+const sourceList = ref([])
+
+// 是否处于生日模式（生日歌把列表顶掉时，接口回包不能覆盖）
+let birthdayActive = false
+
 // 歌曲播放项
 const playIndex = ref(0)
 
@@ -92,7 +98,9 @@ onMounted(() => {
           // 更改播放器加载状态
           store.musicIsOk = true
           // 生成歌单
-          playList.value = res
+          sourceList.value = res
+          // 生日模式下列表已被生日歌顶掉，等关闭蛋糕时再还原
+          if (!birthdayActive) playList.value = res
           console.log(
             '音乐加载完成',
             playIndex.value,
@@ -206,6 +214,174 @@ const loadMusicError = () => {
 
 // 暴露子组件方法
 defineExpose({ playToggle, changeVolume, changeSong, toggleList })
+
+// ---- 生日联动：进蛋糕时换成生日歌，关闭后连进度一起还原 ----
+const BIRTHDAY_SONG_ID = '1963443271'
+
+// 原曲序号 / 原进度 / 原播放状态，关闭时还原用
+let backupIndex = 0
+let backupTime = 0
+let backupPlaying = false
+// 进入生日模式时到底有没有「原曲」可还原（进页面就被接管时没有）
+let backupValid = false
+// 生日歌被浏览器的自动播放策略拦下了（一次都没响过）
+let birthdayBlocked = false
+// 被拦时挂上的「点一下补播」监听，退出生日模式要摘掉
+let gestureRetry = null
+
+const stopGestureRetry = () => {
+  if (!gestureRetry) return
+  document.removeEventListener('pointerdown', gestureRetry, true)
+  document.removeEventListener('keydown', gestureRetry, true)
+  gestureRetry = null
+}
+
+const buildBirthdaySong = () => ({
+  name: '生日快乐',
+  artist: '送给今天的你',
+  url: `${import.meta.env.VITE_SONG_API}/?type=url&id=${BIRTHDAY_SONG_ID}`,
+  // 用 data URL 当歌词，避免播放器再发一次真实网络请求
+  lrc: `data:text/plain;charset=utf-8,${encodeURIComponent(
+    '[00:00.00]生日快乐'
+  )}`
+})
+
+// 切歌瞬间 duration 还是 0，直接 seek 会被夹成 0，所以等元数据就绪再拨回去
+const seekWhenReady = (time) => {
+  if (!time) return
+  const startedAt = performance.now()
+  const apply = () => {
+    const audio = player.value?.audioRef
+    if (!audio) return
+    if (
+      audio.readyState >= 1 &&
+      Number.isFinite(audio.duration) &&
+      audio.duration > 0
+    ) {
+      audio.currentTime = Math.min(time, Math.max(audio.duration - 0.3, 0))
+      return
+    }
+    // 最多等 8s，等不到就放弃（例如原曲加载失败）
+    if (performance.now() - startedAt < 8000) setTimeout(apply, 80)
+  }
+  apply()
+}
+
+// 自动播放可能被浏览器拦下（进页面没有用户交互）：等第一次点击/按键再补播
+const playWhenAllowed = () => {
+  const p = player.value
+  if (!p) return
+  p.play()
+
+  const startedAt = performance.now()
+  const check = () => {
+    const audio = player.value?.audioRef
+    // 已经退出蛋糕模式就不要再管了
+    if (!audio || !birthdayActive) return
+    // 已经响起来了，浏览器没拦
+    if (!audio.paused) return
+    // 还在缓冲（readyState < 2），过一会儿再看，别急着判定成被拦
+    if (audio.readyState < 2 && performance.now() - startedAt < 3000) {
+      setTimeout(check, 200)
+      return
+    }
+
+    // 确实没在播：记下来，关闭时用那次点击把原曲接着播
+    birthdayBlocked = true
+    const retry = (e) => {
+      stopGestureRetry()
+      if (!birthdayActive) return
+      // 关闭按钮那一下不算：它交给 leaveBirthday，用这次交互恢复原曲
+      const el = e.target
+      if (el instanceof Element && el.closest('.birthday .close')) return
+      if (player.value?.audioRef?.paused) player.value.play()
+    }
+    gestureRetry = retry
+    document.addEventListener('pointerdown', retry, true)
+    document.addEventListener('keydown', retry, true)
+  }
+  setTimeout(check, 600)
+}
+
+const enterBirthday = () => {
+  if (birthdayActive) return
+  birthdayActive = true
+  birthdayBlocked = false
+
+  const p = player.value
+  if (p && p.aplayer) {
+    backupValid = true
+    backupIndex = p.aplayer.index || 0
+    backupTime = p.audioRef?.currentTime || 0
+    backupPlaying = !p.audioRef?.paused
+    // 先清空，让歌词缓存一起重置，否则会沿用原歌的歌词
+    p.clearList()
+  } else {
+    // 进页面就自动放蛋糕时播放器还没挂载：按站点自己的自动播放设置来，
+    // 原来该自动播的，关掉蛋糕后就接着播
+    backupValid = false
+    backupIndex = 0
+    backupTime = 0
+    backupPlaying = store.playerAutoplay
+  }
+
+  playList.value = [buildBirthdaySong()]
+  nextTick(() => playWhenAllowed())
+}
+
+const leaveBirthday = (e) => {
+  // 当天结束只撤蛋糕画面，生日歌继续放（e.detail.keepMusic），这里不还原歌单
+  if (e?.detail?.keepMusic) return
+  if (!birthdayActive) return
+  birthdayActive = false
+  stopGestureRetry()
+
+  const p = player.value
+  const list = sourceList.value
+  const index = backupIndex
+  const time = backupTime
+  // 生日歌一次都没响过说明被自动播放策略拦了，这次点击（关闭）正好是交互，
+  // 用这次交互把原曲接着播；本来就该暂停的，仍然保持暂停
+  const playing = backupPlaying || birthdayBlocked
+
+  // 原歌单还没回来（或接口挂了）：等接口回包时由 onMounted 里的判断挂载
+  if (!p || !p.aplayer || !list.length) {
+    playList.value = list
+    return
+  }
+
+  p.clearList()
+  playList.value = list
+  nextTick(() => {
+    const pl = player.value
+    if (backupValid) {
+      // 有原曲：切回去，进度也拨回去
+      pl.switchList(index)
+      seekWhenReady(time)
+    } else if (
+      pl?.aplayer?.order === 'random' &&
+      pl.aplayer.randomOrder?.length
+    ) {
+      // 生日模式是进页面就接管的，没有原曲可还原。
+      // 这时不能停在 0，否则每次关掉蛋糕都从歌单第一首开始，随机播放就废了
+      pl.switchList(pl.aplayer.randomOrder[0])
+    }
+    playing ? pl.play() : pl.pause()
+  })
+}
+
+onMounted(() => {
+  window.addEventListener('birthday:show', enterBirthday)
+  window.addEventListener('birthday:hide', leaveBirthday)
+  // 生日蛋糕比播放器先挂载，这里主动问一次：如果正放着蛋糕，把生日歌换上
+  window.dispatchEvent(new Event('birthday:query'))
+})
+
+onBeforeUnmount(() => {
+  stopGestureRetry()
+  window.removeEventListener('birthday:show', enterBirthday)
+  window.removeEventListener('birthday:hide', leaveBirthday)
+})
 </script>
 
 <style lang="scss" scoped>
