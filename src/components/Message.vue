@@ -104,6 +104,12 @@ watch(
     .logo-img {
       border-radius: 50%;
       width: 120px;
+      cursor: pointer;
+      transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+
+      &:hover {
+        transform: rotate(360deg);
+      }
     }
 
     .name {
