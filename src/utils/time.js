@@ -1,5 +1,5 @@
 import { h } from 'vue'
-import { SpaCandle } from '@icon-park/vue-next'
+import { SpaCandle, GithubOne } from '@icon-park/vue-next'
 
 // 时钟
 export const getCurrentTime = () => {
@@ -111,28 +111,71 @@ export const helloInit = () => {
   })
 }
 
-// 默哀模式
-const anniversaries = {
-  7.7: '中国人民抗日战争纪念日',
-  9.18: '九·一八事变纪念日',
-  12.13: '南京大屠杀死难者国家公祭日'
+// 生日模式
+const birthday = {
+  11.4: '生日快乐'
 }
-export const checkDays = () => {
+
+export const checkBirthday = () => {
   const myDate = new Date()
   const mon = myDate.getMonth() + 1
   const date = myDate.getDate()
   const key = `${mon}.${date}`
-  if (Object.prototype.hasOwnProperty.call(anniversaries, key)) {
-    console.log(`今天是${anniversaries[key]}`)
-    const gray = document.createElement('style')
-    gray.innerHTML = 'html{filter: grayscale(100%)}'
-    document.head.appendChild(gray)
+  if (Object.prototype.hasOwnProperty.call(birthday, key)) {
     ElMessage({
-      message: `今天是${anniversaries[key]}`,
-      duration: 14000,
-      icon: h(SpaCandle, { theme: 'filled', fill: '#efefef' })
+      message: `${birthday[key]}`,
+      duration: 30000,
+      icon: h(GithubOne, { theme: 'filled', fill: '#efefef' })
     })
   }
+}
+
+// 默哀模式
+const anniversaries = {
+  5.12: '汶川大地震',
+  5.22: '袁隆平爷爷纪念日',
+  7.7: '卢沟桥事变',
+  7.18: '唐山大地震',
+  9.18: '九一八事变',
+  12.13: '国家公祭日'
+}
+
+// 清明是二十四节气，公历日期不固定（4 月 4/5/6 日），用寿星公式按年份推算
+export const getQingmingDay = (year = new Date().getFullYear()) => {
+  // 21 世纪常数 4.81，20 世纪为 5.59
+  const c = year >= 2000 ? 4.81 : 5.59
+  const y = year % 100
+  return Math.floor(y * 0.2422 + c) - Math.floor(y / 4)
+}
+
+// 取当天对应的纪念日名称，没有则返回空字符串
+const getAnniversaryName = (date = new Date()) => {
+  const key = `${date.getMonth() + 1}.${date.getDate()}`
+  if (Object.prototype.hasOwnProperty.call(anniversaries, key)) {
+    return anniversaries[key]
+  }
+  // 清明节日期随年份浮动，单独判断
+  if (
+    date.getMonth() + 1 === 4 &&
+    date.getDate() === getQingmingDay(date.getFullYear())
+  ) {
+    return '清明节'
+  }
+  return ''
+}
+
+export const checkAnniversaries = () => {
+  const name = getAnniversaryName()
+  if (!name) return
+
+  const gray = document.createElement('style')
+  gray.innerHTML = 'html{filter: grayscale(100%)}'
+  document.head.appendChild(gray)
+  ElMessage({
+    message: `${name}`,
+    duration: 60000,
+    icon: h(SpaCandle, { theme: 'filled', fill: '#efefef' })
+  })
 }
 
 // 建站日期统计

@@ -41,7 +41,7 @@
   <UpdateTip />
 </template>
 <script setup>
-import { helloInit, checkDays } from '@/utils/time.js'
+import { helloInit, checkAnniversaries, checkBirthday } from '@/utils/time.js'
 import { HamburgerButton, CloseSmall } from '@icon-park/vue-next'
 import { mainStore } from '@/store'
 import { Icon } from '@vicons/utils'
@@ -69,8 +69,10 @@ const loadComplete = () => {
   nextTick(() => {
     // 欢迎提示
     helloInit()
+    // 生日模式
+    checkBirthday()
     // 默哀模式
-    checkDays()
+    checkAnniversaries()
   })
 }
 
