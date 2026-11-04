@@ -1,7 +1,7 @@
 <template>
   <!-- 生日当天的底部祝福条：蛋糕关掉后一直留在这里，点按钮可以再看一次 -->
   <Transition name="slide-up">
-    <div v-if="tipVisible" class="birthday-tip">
+    <div v-if="tipVisible" ref="tipRef" class="birthday-tip">
       <div class="dot" />
       <span class="text">收到一份生日祝福</span>
       <button class="btn primary" type="button" @click="openCake">接收</button>
@@ -27,6 +27,10 @@
 import { h } from 'vue'
 import { isBirthday } from '@/utils/time.js'
 import { GithubOne } from '@icon-park/vue-next'
+import { useBottomTipStack } from '@/utils/tipStack.js'
+import { mainStore } from '@/store'
+
+const store = mainStore()
 
 const canvasRef = ref(null)
 const visible = ref(false)
@@ -34,6 +38,9 @@ const visible = ref(false)
 const alive = ref(true)
 // 生日提示条
 const tipVisible = ref(false)
+// 底部提示条和「页面有更新」共用一套堆叠：先出现的贴底，后来的往上叠
+const tipRef = ref(null)
+useBottomTipStack('birthday', tipVisible, tipRef)
 
 // ---- 常量 ----
 const TAU = Math.PI * 2
@@ -503,7 +510,23 @@ const close = () => {
   if (!visible.value) return
   hideCake(false)
   // 关掉后底部祝福一直保留到今天结束
-  tipVisible.value = isBirthday()
+  if (isBirthday()) showTip()
+}
+
+// 祝福条出现：等壁纸加载完、加载层收起后再冒头，免得压在加载动画上面
+const showTip = () => {
+  if (store.imgLoadStatus) {
+    tipVisible.value = true
+    return
+  }
+  const stopWatch = watch(
+    () => store.imgLoadStatus,
+    (loaded) => {
+      if (!loaded) return
+      stopWatch()
+      tipVisible.value = true
+    }
+  )
 }
 
 // 打开蛋糕：进页面、跨到零点、点「再看一次」都走这里
@@ -529,12 +552,13 @@ const openCake = () => {
 // 当天是生日就直接放蛋糕；过了当天只收蛋糕和祝福条，生日歌留着
 const checkToday = () => {
   if (isBirthday()) {
+    // 进页面就放蛋糕：更新条在不在都一样
     openCake()
     return
   }
   // 过了当天：祝福条一定收掉（否则页面整夜开着会留着昨天的祝福）
   tipVisible.value = false
-  // 蛋糕收掉，但歌可以继续听；真正的清空在 00:15 刷新时
+  // 蛋糕收掉，但歌可以继续听；00:15 提示消失后按原来的走
   hideCake(true)
 }
 
@@ -783,6 +807,8 @@ onBeforeUnmount(() => {
   box-shadow: 0 6px 24px rgb(0 0 0 / 18%);
   color: #fff;
   font-size: 14px;
+  /* left:50% 会把绝对定位元素的可用宽度砍掉一半，这里显式按内容撑开 */
+  width: max-content;
   max-width: calc(100vw - 32px);
 
   .dot {
@@ -795,7 +821,8 @@ onBeforeUnmount(() => {
   }
 
   .text {
-    flex-shrink: 0;
+    flex-shrink: 1;
+    min-width: 0;
   }
 
   .btn {
@@ -807,6 +834,8 @@ onBeforeUnmount(() => {
     font-size: 13px;
     font-family: inherit;
     cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
     transition: background 0.2s;
 
     &:hover {
@@ -831,6 +860,11 @@ onBeforeUnmount(() => {
       font-size: 13px;
     }
   }
+}
+
+/* 已经落位过，之后的上下位移走过渡 */
+.birthday-tip.tip-stacked {
+  transition: bottom 0.3s ease;
 }
 
 .slide-up-enter-active,

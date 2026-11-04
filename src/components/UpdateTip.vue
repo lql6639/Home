@@ -1,6 +1,6 @@
 <template>
   <Transition name="slide-up">
-    <div v-if="hasUpdate" class="update-tip">
+    <div v-if="hasUpdate" ref="tipRef" class="update-tip">
       <div class="dot" />
       <span class="text">页面有更新，刷新后生效</span>
       <button class="btn primary" @click="applyUpdate">刷新</button>
@@ -10,13 +10,18 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import {
   hasUpdate,
   ignoreUpdate,
   applyUpdate,
   startUpdateWatcher
 } from '@/utils/update.js'
+import { useBottomTipStack } from '@/utils/tipStack.js'
+
+// 底部提示条共用一套堆叠规则：先出现的贴底，后来的往上叠
+const tipRef = ref(null)
+useBottomTipStack('update', hasUpdate, tipRef)
 
 onMounted(() => {
   startUpdateWatcher()
@@ -40,6 +45,8 @@ onMounted(() => {
   box-shadow: 0 6px 24px rgb(0 0 0 / 18%);
   color: #fff;
   font-size: 14px;
+  /* left:50% 会把绝对定位元素的可用宽度砍掉一半，这里显式按内容撑开 */
+  width: max-content;
   max-width: calc(100vw - 32px);
 
   .dot {
@@ -51,7 +58,8 @@ onMounted(() => {
   }
 
   .text {
-    flex-shrink: 0;
+    flex-shrink: 1;
+    min-width: 0;
   }
 
   .btn {
@@ -62,6 +70,8 @@ onMounted(() => {
     color: #fff;
     font-size: 13px;
     cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
     transition: background 0.2s;
 
     &:hover {
@@ -86,6 +96,11 @@ onMounted(() => {
       font-size: 13px;
     }
   }
+}
+
+/* 已经落位过，之后的上下位移走过渡 */
+.update-tip.tip-stacked {
+  transition: bottom 0.3s ease;
 }
 
 .slide-up-enter-active,

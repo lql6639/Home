@@ -46,6 +46,11 @@ export function ignoreUpdate() {
 
 // 立即更新：清空 PWA 缓存与 localStorage 后强制刷新
 export async function applyUpdate() {
+  // 先把更新条收掉：底部那摞提示条会顺势把下面那条顶上来/让上面那条落下去，
+  // 动画走完（0.3s）再刷新，视觉上是「收条 → 落位 → 换新版本」，不是突然白屏
+  hasUpdate.value = false
+  await new Promise((resolve) => setTimeout(resolve, 320))
+
   try {
     if ('caches' in window) {
       const keys = await caches.keys()
