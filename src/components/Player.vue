@@ -93,7 +93,12 @@ onMounted(() => {
           store.musicIsOk = true
           // 生成歌单
           playList.value = res
-          console.log('音乐加载完成', playIndex.value, playList.value.length, props.volume)
+          console.log(
+            '音乐加载完成',
+            playIndex.value,
+            playList.value.length,
+            props.volume
+          )
         }
       )
     } catch (err) {
