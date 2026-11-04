@@ -116,18 +116,19 @@ const birthday = {
   11.4: '生日快乐'
 }
 
+export const isBirthday = (date = new Date()) => {
+  const key = `${date.getMonth() + 1}.${date.getDate()}`
+  return Object.prototype.hasOwnProperty.call(birthday, key)
+}
+
 export const checkBirthday = () => {
-  const myDate = new Date()
-  const mon = myDate.getMonth() + 1
-  const date = myDate.getDate()
-  const key = `${mon}.${date}`
-  if (Object.prototype.hasOwnProperty.call(birthday, key)) {
-    ElMessage({
-      message: `${birthday[key]}`,
-      duration: 30000,
-      icon: h(GithubOne, { theme: 'filled', fill: '#efefef' })
-    })
-  }
+  if (!isBirthday()) return
+  const key = `${new Date().getMonth() + 1}.${new Date().getDate()}`
+  ElMessage({
+    message: `${birthday[key]}`,
+    duration: 30000,
+    icon: h(GithubOne, { theme: 'filled', fill: '#efefef' })
+  })
 }
 
 // 默哀模式

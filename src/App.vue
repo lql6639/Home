@@ -39,6 +39,8 @@
   </Transition>
   <!-- 版本更新提示 -->
   <UpdateTip />
+  <!-- 生日蛋糕（仅生日当天展示） -->
+  <Birthday />
 </template>
 <script setup>
 import { helloInit, checkAnniversaries, checkBirthday } from '@/utils/time.js'
@@ -54,6 +56,7 @@ import Footer from '@/components/Footer.vue'
 import Box from '@/views/Box/index.vue'
 import MoreSet from '@/views/MoreSet/index.vue'
 import UpdateTip from '@/components/UpdateTip.vue'
+import Birthday from '@/components/Birthday.vue'
 import cursorInit from '@/utils/cursor.js'
 import config from '@/../package.json'
 

@@ -29,6 +29,8 @@ let lastTime = 0
 let resizeTimer = null
 let reducedMotion = false
 let speedScale = 1
+// 全屏特效（如生日蛋糕）展示期间暂停花瓣动画
+let suspended = false
 let img = null
 
 // 指针位置（-1 ~ 1，用于视差），带缓动
@@ -153,7 +155,7 @@ const stop = () => {
 }
 
 const start = () => {
-  if (rafId || document.hidden) return
+  if (rafId || suspended || document.hidden) return
   lastTime = 0
   rafId = requestAnimationFrame(frame)
 }
@@ -210,6 +212,13 @@ const onVisibilityChange = () => {
   else start()
 }
 
+// 生日蛋糕等全屏特效出现时暂停，避免两个动画循环同时跑
+const onEffectToggle = (event) => {
+  suspended = event.type === 'birthday:show'
+  if (suspended) stop()
+  else start()
+}
+
 // 窗口尺寸变化做防抖，避免拖动窗口时反复重建画布
 const onResize = () => {
   clearTimeout(resizeTimer)
@@ -249,6 +258,8 @@ onMounted(() => {
 
   window.addEventListener('resize', onResize)
   document.addEventListener('visibilitychange', onVisibilityChange)
+  window.addEventListener('birthday:show', onEffectToggle)
+  window.addEventListener('birthday:hide', onEffectToggle)
 
   if (props.interactive) {
     window.addEventListener('pointermove', onPointerMove, { passive: true })
@@ -261,6 +272,8 @@ onBeforeUnmount(() => {
   clearTimeout(resizeTimer)
   window.removeEventListener('resize', onResize)
   document.removeEventListener('visibilitychange', onVisibilityChange)
+  window.removeEventListener('birthday:show', onEffectToggle)
+  window.removeEventListener('birthday:hide', onEffectToggle)
   window.removeEventListener('pointermove', onPointerMove)
   window.removeEventListener('pointerleave', onPointerLeave)
   petals = []
