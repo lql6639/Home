@@ -1,27 +1,15 @@
 [
   {
-    "name": "ttcctctc",
-    "description": "「我們的存在無需許可，我們的名字無需解釋。」",
-    "url": "https://ttcctctc.top",
-    "avatar": "https://ttcctctc.top/images/icon/logo.jpg"
+    "name": "锦木祈杰",
+    "description": "因你而在的故事 ~",
+    "url": "https://qijieya.cn",
+    "avatar": "https://oss.qijieya.cn/1/aili.gif"
   },
   {
-    "name": "叶钻猫猫",
-    "description": "一个安静的猫猫小站，建立于世界的边缘 ~",
-    "url": "https://raineko.net",
-    "avatar": "https://raineko.net/images/icon/logo.png"
-  },
-  {
-    "name": "MiFeng",
-    "description": "路漫漫其修远兮，吾将上下而求索。",
-    "url": "https://imbee.top",
-    "avatar": "https://imbee.top/home-image/icon/logo.png"
-  },
-  {
-    "name": "Amenatsu",
-    "description": "也许无人在意呢……",
-    "url": "https://rainsummer.top",
-    "avatar": "https://rainsummer.top/avatar/avatar.webp"
+    "name": "举个栗子",
+    "description": "雾散处，玫瑰花开 ~",
+    "url": "https://alcy.cc",
+    "avatar": "https://alcy.cc/avatar.jpg"
   },
   {
     "name": "Wolfx",
@@ -31,9 +19,21 @@
     "logo": true
   },
   {
-    "name": "xiaoqity",
-    "description": "这里是小淇喵呜的个人站。",
-    "url": "https://xiaoqity.top",
-    "avatar": "https://xiaoqity.top/images/icon/avatar.jpg"
+    "name": "MiFeng",
+    "description": "路漫漫其修远兮，吾将上下而求索。",
+    "url": "https://imbee.top",
+    "avatar": "https://imbee.top/home-image/icon/logo.png"
+  },
+  {
+    "name": "猫不吃鱼",
+    "description": "最最好的，与最最痛苦的，是一样的 ~",
+    "url": "https://starsei.com",
+    "avatar": "https://starsei.com/favicon.ico"
+  },
+  {
+    "name": "叶钻猫猫",
+    "description": "无人相伴的路，惝恍迷离的舞 ~",
+    "url": "https://raineko.net",
+    "avatar": "https://raineko.net/images/icon/logo.png"
   }
 ]
