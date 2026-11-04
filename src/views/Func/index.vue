@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-import { getCurrentTime } from '@/utils/getTime'
+import { getCurrentTime } from '@/utils/time.js'
 import { mainStore } from '@/store'
 import Music from '@/components/Music.vue'
 import Hitokoto from '@/components/Hitokoto.vue'

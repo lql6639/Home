@@ -41,7 +41,7 @@
   <UpdateTip />
 </template>
 <script setup>
-import { helloInit, checkDays } from '@/utils/getTime.js'
+import { helloInit, checkDays } from '@/utils/time.js'
 import { HamburgerButton, CloseSmall } from '@icon-park/vue-next'
 import { mainStore } from '@/store'
 import { Icon } from '@vicons/utils'
