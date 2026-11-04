@@ -225,6 +225,7 @@ defineExpose({ playToggle, changeVolume, changeSong, toggleList })
       margin-left: 0;
       background-color: #ffffff40;
       border-color: transparent !important;
+      height: auto !important; // 库默认写死 90px，歌词加高后必须自适应，否则内容溢出叠到列表上
 
       .aplayer-music {
         flex-grow: initial;
@@ -232,8 +233,7 @@ defineExpose({ playToggle, changeVolume, changeSong, toggleList })
         overflow: initial;
 
         .aplayer-title {
-          font-size: 16px;
-          margin-right: 6px;
+          margin-right: 4px;
         }
 
         .aplayer-author {
@@ -243,18 +243,18 @@ defineExpose({ playToggle, changeVolume, changeSong, toggleList })
 
       .aplayer-lrc {
         text-align: left;
-        margin: 7px 0 6px 6px;
-        height: 44px;
+        margin: 7px 0 7px 7px;
+        height: 88px;
         mask: linear-gradient(
-          #fff 15%,
-          #fff 85%,
-          hsla(0deg, 0%, 100%, 0.6) 90%,
+          #fff 10%,
+          #fff 90%,
+          hsla(0deg, 0%, 100%, 0.6) 95%,
           hsla(0deg, 0%, 100%, 0)
         );
         -webkit-mask: linear-gradient(
-          #fff 15%,
-          #fff 85%,
-          hsla(0deg, 0%, 100%, 0.6) 90%,
+          #fff 10%,
+          #fff 90%,
+          hsla(0deg, 0%, 100%, 0.6) 95%,
           hsla(0deg, 0%, 100%, 0)
         );
 
@@ -268,8 +268,9 @@ defineExpose({ playToggle, changeVolume, changeSong, toggleList })
         }
 
         .aplayer-lrc-current {
-          font-size: 0.95rem;
-          margin-bottom: 4px !important;
+          font-size: 1rem;
+          font-weight: 700;
+          margin: 0.68rem 0 !important;
         }
       }
 
