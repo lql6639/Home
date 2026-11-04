@@ -3,6 +3,8 @@
   <Loading />
   <!-- 壁纸 -->
   <Background @loadComplete="loadComplete" />
+  <!-- 花瓣漂浮 -->
+  <Float :density="1" />
   <!-- 主界面 -->
   <Transition name="fade" mode="out-in">
     <main id="main" v-if="store.imgLoadStatus">
@@ -47,6 +49,7 @@ import Loading from '@/components/Loading.vue'
 import MainLeft from '@/views/Main/Left.vue'
 import MainRight from '@/views/Main/Right.vue'
 import Background from '@/components/Background.vue'
+import Float from '@/components/Float.vue'
 import Footer from '@/components/Footer.vue'
 import Box from '@/views/Box/index.vue'
 import MoreSet from '@/views/MoreSet/index.vue'
