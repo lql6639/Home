@@ -95,5 +95,9 @@ onBeforeUnmount(() => {
     margin: 2rem 0rem 0.5rem 0rem;
     font-size: 0.95rem;
   }
+
+  .span {
+    font-family: 'Pacifico-Regular';
+  }
 }
 </style>

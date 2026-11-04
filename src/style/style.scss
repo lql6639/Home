@@ -7,7 +7,7 @@ GitHub：https://github.com/imsyy/home
 
 @charset "utf-8";
 
-/*全局样式*/
+/* 全局样式 */
 
 html,
 body {
@@ -67,9 +67,11 @@ p {
   transition:
     backdrop-filter 0.3s,
     transform 0.3s;
+
   &:hover {
     transform: scale(1.01);
   }
+
   &:active {
     transform: scale(0.98);
   }
@@ -94,6 +96,7 @@ p {
   .el-message__badge {
     display: none;
   }
+
   .el-message__content {
     white-space: nowrap;
   }
@@ -104,14 +107,20 @@ p {
   .el-progress-bar__outer {
     border-radius: 6px;
     background-color: #00000020;
+
     .el-progress-bar__inner {
       background-color: #efefef;
       border-radius: 6px;
       text-align: center;
-      font-family: 'UnidreamLED';
+
       span {
+        font-family: 'Pacifico-Regular';
         color: #564d59;
         font-size: 0.9rem;
+        letter-spacing: 2px;
+        /* 抵消末尾多出的字间距，保持视觉居中 */
+        margin-left: 2px;
+        white-space: nowrap;
       }
     }
   }
@@ -128,12 +137,14 @@ p {
   border-radius: 8px !important;
   border: 1px solid transparent !important;
   background-color: transparent !important;
+
   .el-card__header {
     font-weight: bold;
     padding: 16px 20px !important;
     background-color: #ffffff30 !important;
     border-bottom: 1px solid transparent !important;
   }
+
   .el-card__body {
     padding: 0 !important;
     background-color: #ffffff10 !important;
@@ -156,6 +167,7 @@ p {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -166,6 +178,7 @@ p {
     filter: blur(20px) brightness(0.3);
     transform: scale(1.6);
   }
+
   to {
     filter: blur(0) brightness(1);
     transform: scale(1);
@@ -176,6 +189,7 @@ p {
   from {
     transform: scale(1.2);
   }
+
   to {
     transform: scale(1);
   }
