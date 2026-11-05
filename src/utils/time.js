@@ -108,7 +108,7 @@ export const helloInit = () => {
   })
   ElMessage({
     dangerouslyUseHTMLString: true,
-    message: `点击鼠标中键即可获取壁纸ovo`
+    message: `点击鼠标中键即可获取壁纸`
   })
 }
 
