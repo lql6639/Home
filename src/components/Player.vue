@@ -101,6 +101,7 @@ onMounted(() => {
           sourceList.value = res
           // 生日模式下列表已被生日歌顶掉，等关闭蛋糕时再还原
           if (!birthdayActive) playList.value = res
+          nextTick(() => queueCenterLrc())
           console.log(
             '音乐加载完成',
             playIndex.value,
@@ -180,12 +181,63 @@ const changeSong = (type) => {
   type === 0 ? player.value.skipBack() : player.value.skipForward()
   nextTick(() => {
     player.value.play()
+    queueCenterLrc()
   })
 }
 
 // 切换歌曲列表状态
 const toggleList = () => {
   player.value.toggleList()
+  nextTick(() => queueCenterLrc())
+}
+
+// ---- 歌词：让正在唱的那一行停在框的垂直中间 ----
+// 库只按 -index*16 平移，每行又固定 16px 高，所以当前行永远贴在框顶。
+// 这里用 padding-top 补一段偏移：库每次重渲染只会重写 transform，
+// 从不碰 padding，补偿不会被冲掉。
+// 偏移直接算，不去量当前位置——切换行时库的 transform 是过渡过去的，
+// 那一瞬间量到的是旧位置，会把补偿算成 0
+const centerLrc = () => {
+  const box = document.querySelector('.aplayer .aplayer-lrc')
+  const contents = box?.querySelector('.aplayer-lrc-contents')
+  const cur = contents?.querySelector('.aplayer-lrc-current')
+  if (!box || !contents || !cur) return
+
+  // 当前行自带 0.68rem 上下边距，没补偿时它就顶在框顶 + 这个边距的位置。
+  // 库里 p 有 transition: all .5s，刚切行时 margin 还在从 0 过渡，量到的是 0，
+  // 所以这里按样式里的设计值兜底（跟着根字号走）
+  let marginTop = parseFloat(getComputedStyle(cur).marginTop) || 0
+  if (marginTop === 0) {
+    const rootFont = parseFloat(
+      getComputedStyle(document.documentElement).fontSize
+    )
+    marginTop = (rootFont || 16) * 0.68
+  }
+  const pad = (box.clientHeight - cur.offsetHeight) / 2 - marginTop
+  contents.style.paddingTop = pad > 0.5 ? `${pad}px` : '0px'
+}
+
+// 换行时库还没把新样式落到 DOM 上，当场算会读到上一行的边距，
+// 所以下一帧再补一次
+let lrcFrame = 0
+const applyLrcCenter = () => {
+  centerLrc()
+  cancelAnimationFrame(lrcFrame)
+  lrcFrame = requestAnimationFrame(centerLrc)
+}
+
+// 换行、缩放窗口都要重新居中
+const onLrcResize = () => centerLrc()
+watch(() => player.value?.aplayer?.lyricIndex, applyLrcCenter, {
+  flush: 'post'
+})
+
+// 歌词是异步拉的，而且初始行号就是 0（不触发上面的 watch），
+// 所以加载完、开合列表时各补几次，等库把行渲染出来
+const queueCenterLrc = () => {
+  centerLrc()
+  setTimeout(centerLrc, 300)
+  setTimeout(centerLrc, 1200)
 }
 
 // 加载音频错误
@@ -373,14 +425,18 @@ const leaveBirthday = (e) => {
 onMounted(() => {
   window.addEventListener('birthday:show', enterBirthday)
   window.addEventListener('birthday:hide', leaveBirthday)
+  // 窗口尺寸变了，歌词框的高度/行宽都会变，重新居中
+  window.addEventListener('resize', onLrcResize)
   // 生日蛋糕比播放器先挂载，这里主动问一次：如果正放着蛋糕，把生日歌换上
   window.dispatchEvent(new Event('birthday:query'))
 })
 
 onBeforeUnmount(() => {
   stopGestureRetry()
+  cancelAnimationFrame(lrcFrame)
   window.removeEventListener('birthday:show', enterBirthday)
   window.removeEventListener('birthday:hide', leaveBirthday)
+  window.removeEventListener('resize', onLrcResize)
 })
 </script>
 
@@ -405,22 +461,22 @@ onBeforeUnmount(() => {
 
       .aplayer-music {
         flex-grow: initial;
-        margin-bottom: 2px;
+        margin-bottom: 1rem;
         overflow: initial;
 
         .aplayer-title {
-          margin-right: 4px;
+          margin-right: 0px;
         }
 
         .aplayer-author {
-          color: #efefef;
+          color: #ffffff;
         }
       }
 
       .aplayer-lrc {
         text-align: left;
-        margin: 7px 0 7px 7px;
-        height: 88px;
+        margin: 7px 0 17px 7px;
+        height: 68px;
         mask: linear-gradient(
           #fff 10%,
           #fff 90%,
@@ -444,6 +500,7 @@ onBeforeUnmount(() => {
         }
 
         .aplayer-lrc-current {
+          color: #ffffff;
           font-size: 1rem;
           font-weight: 700;
           margin: 0.68rem 0 !important;
@@ -457,7 +514,7 @@ onBeforeUnmount(() => {
   }
 
   :deep(.aplayer-list) {
-    margin-top: 6px;
+    margin-top: 10px;
     height: v-bind(listHeight);
     background-color: transparent;
 
