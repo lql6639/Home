@@ -125,10 +125,12 @@ const playerData = reactive({
   id: import.meta.env.VITE_SONG_ID
 })
 
-// 开启播放列表
+// 开启播放列表（点 Hot 也走这里）
 const openMusicList = () => {
   musicListShow.value = true
   playerRef.value.toggleList()
+  // 自动播放被浏览器拦下时，这次点击就是那次交互，顺手把歌补播一下
+  playerRef.value.playIfBlocked()
 }
 
 // 关闭播放列表

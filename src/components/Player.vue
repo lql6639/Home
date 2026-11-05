@@ -125,8 +125,13 @@ onMounted(() => {
   })
 })
 
+// 这首歌到底有没有真的响过。浏览器拒绝无交互自动播放时不会派发 play 事件，
+// 所以它为 false 就等于「一次都没响过」，可以放心补播
+let everPlayed = false
+
 // 播放
 const onPlay = () => {
+  everPlayed = true
   playIndex.value = player.value.aplayer.index
   // 播放状态
   store.setPlayerState(player.value.audioRef.paused)
@@ -264,8 +269,30 @@ const loadMusicError = () => {
   )
 }
 
+// ---- 自动播放被拦的兜底 ----
+// 进页面没有用户交互，浏览器有时会直接把自动播放拒掉，库只会 console.warn 一声，
+// 界面上什么都看不出来。点 Hot 打开列表是一次真实交互，正好借这次交互把歌接上。
+// 已经在放、或者响过又被用户自己暂停的，都不动它
+const playIfBlocked = () => {
+  const p = player.value
+  const audio = p?.audioRef
+  // 生日歌有自己的兜底（playWhenAllowed），这里不插手
+  if (!audio || birthdayActive) return
+  // 本来就没开自动播放，别硬播
+  if (!store.playerAutoplay) return
+  // 正在放，或者响过之后被暂停了
+  if (!audio.paused || everPlayed) return
+  p.play()
+}
+
 // 暴露子组件方法
-defineExpose({ playToggle, changeVolume, changeSong, toggleList })
+defineExpose({
+  playToggle,
+  changeVolume,
+  changeSong,
+  toggleList,
+  playIfBlocked
+})
 
 // ---- 生日联动：进蛋糕时换成生日歌，关闭后连进度一起还原 ----
 const BIRTHDAY_SONG_ID = '1963443271'
