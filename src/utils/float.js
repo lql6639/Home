@@ -152,12 +152,26 @@ export function useFloat(props) {
   }
 
   // 视口变化：重设画布分辨率、调整花瓣数量
+  // 返回 false 表示尺寸还没就绪，调用方需要下一帧重试
   const resize = () => {
     const canvas = canvasRef.value
-    if (!canvas) return
+    if (!canvas) return false
 
-    width = window.innerWidth
-    height = window.innerHeight
+    // 画布还没被布局出来（宽高为 0）时，说明组件刚挂上或所在容器还不可见，
+    // 这时候读到的视口尺寸同样不可信，先不取，让调用方下一帧再来
+    if (!canvas.getBoundingClientRect().width) return false
+
+    // 用文档视口尺寸，而不是 window.innerWidth：后者在页面刚被恢复、
+    // 某些 WebView / 内嵌环境下会报 0 或很小的值。一旦拿这种尺寸建花瓣，
+    // x 落在 rand(-60, 60)、y 落在 0，整簇就堆在左上角；又因为 height 是 0，
+    // 每帧都判定「已飘出底部」，花瓣只会原地重生、永远飘不下来。
+    // 同时排除最小化、切桌面这类极小的中间态
+    const nextWidth = document.documentElement.clientWidth
+    const nextHeight = document.documentElement.clientHeight
+    if (nextWidth < 64 || nextHeight < 64) return false
+
+    width = nextWidth
+    height = nextHeight
     dpr = Math.min(window.devicePixelRatio || 1, 2)
 
     canvas.width = Math.round(width * dpr)
@@ -186,6 +200,8 @@ export function useFloat(props) {
       petal.x = Math.min(petal.x, width + petal.size)
       petal.y = Math.min(petal.y, height + petal.size)
     })
+
+    return true
   }
 
   const onPointerMove = (event) => {
@@ -229,8 +245,14 @@ export function useFloat(props) {
     img = new Image()
     img.decoding = 'async'
     img.onload = () => {
-      resize()
-      start()
+      // 图片可能在布局完成前就加载好了，此时量不到画布尺寸。
+      // 每帧重试，等宽高就绪再撒花瓣（上限约 1 秒，避免不可见时死转）
+      let tries = 0
+      const boot = () => {
+        if (resize() || ++tries > 60) start()
+        else requestAnimationFrame(boot)
+      }
+      boot()
     }
     img.onerror = () => {
       console.warn('花瓣图片加载失败，已跳过花瓣特效')
