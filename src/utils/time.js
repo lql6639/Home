@@ -1,5 +1,6 @@
 import { h } from 'vue'
 import { SpaCandle, GithubOne } from '@icon-park/vue-next'
+import { isLunarDay, isSolarDay } from './lunar.js'
 
 // 时钟
 export const getCurrentTime = () => {
@@ -111,21 +112,29 @@ export const helloInit = () => {
   })
 }
 
-// 生日模式
-const birthday = {
-  11.4: '生日快乐'
+// 生日模式：农历 + 新历，两条走同一套流程
+const birthdays = [
+  { calendar: 'solar', month: 2, day: 6, message: '生日快乐' },
+  { calendar: 'lunar', month: 12, day: 25, message: '生日快乐' }
+]
+
+// 命中当天生日时返回祝福文案，其余返回空字符串
+export const getBirthdayMessage = (date = new Date()) => {
+  const hit = birthdays.find((item) =>
+    item.calendar === 'lunar'
+      ? isLunarDay(item.month, item.day, { date })
+      : isSolarDay(item.month, item.day, date)
+  )
+  return hit ? hit.message : ''
 }
 
-export const isBirthday = (date = new Date()) => {
-  const key = `${date.getMonth() + 1}.${date.getDate()}`
-  return Object.prototype.hasOwnProperty.call(birthday, key)
-}
+export const isBirthday = (date = new Date()) => !!getBirthdayMessage(date)
 
 export const checkBirthday = () => {
-  if (!isBirthday()) return
-  const key = `${new Date().getMonth() + 1}.${new Date().getDate()}`
+  const message = getBirthdayMessage()
+  if (!message) return
   const instance = ElMessage({
-    message: `${birthday[key]}`,
+    message,
     // 0 = 不自动关闭，生日当天一直显示
     duration: 0,
     icon: h(GithubOne, { theme: 'filled', fill: '#efefef' })
