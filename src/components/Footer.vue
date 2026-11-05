@@ -45,6 +45,7 @@
 import { MusicOne } from '@icon-park/vue-next'
 import { mainStore } from '@/store'
 import config from '@/../package.json'
+import { siteHref } from '@/utils/site.js'
 
 const store = mainStore()
 const fullYear = new Date().getFullYear()
@@ -53,15 +54,8 @@ const fullYear = new Date().getFullYear()
 const siteStartDate = ref(import.meta.env.VITE_SITE_START)
 const siteIcp = ref(import.meta.env.VITE_SITE_ICP)
 const siteAnthor = ref(import.meta.env.VITE_SITE_ANTHOR)
-const siteUrl = computed(() => {
-  const url = import.meta.env.VITE_SITE_URL
-  if (!url) return 'https://imbee.top'
-  // 判断协议前缀
-  if (!url.startsWith('http://') && !url.startsWith('https://')) {
-    return '//' + url
-  }
-  return url
-})
+// 站点地址（带协议前缀），统一由 utils/site.js 解析
+const siteUrl = siteHref
 </script>
 
 <style lang="scss" scoped>

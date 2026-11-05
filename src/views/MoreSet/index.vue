@@ -18,9 +18,9 @@
     <el-row :gutter="40">
       <el-col :span="12" class="left">
         <div class="logo text-hidden">
-          <span class="bg">{{ siteUrl[0] }}</span>
-          <span class="sm">.{{ siteUrl[1] }}</span>
-          <span class="smm">.{{ siteUrl[2] }}</span>
+          <span v-for="(part, i) in siteParts" :key="i" :class="part.cls">{{
+            part.text
+          }}</span>
         </div>
         <div class="version">
           <div class="num">v&nbsp;{{ config.version }}</div>
@@ -33,7 +33,7 @@
               class="github"
               theme="outline"
               size="24"
-              @click="jumpTo(config.github)"
+              @click="jumpTo(config.repository.url)"
             />
           </el-tooltip>
         </div>
@@ -77,21 +77,10 @@ import {
 import { mainStore } from '@/store'
 import Set from '@/components/Set.vue'
 import config from '@/../package.json'
+import { siteParts } from '@/utils/site.js'
 
 const store = mainStore()
 const closeShow = ref(false)
-
-// 站点链接
-const siteUrl = computed(() => {
-  const url = import.meta.env.VITE_SITE_URL
-  if (!url) return 'imsyy.top'.split('.')
-  // 判断协议前缀
-  if (url.startsWith('http://') || url.startsWith('https://')) {
-    const urlFormat = url.replace(/^(https?:\/\/)/, '')
-    return urlFormat.split('.')
-  }
-  return url.split('.')
-})
 
 // 更新日志
 const upData = reactive({
@@ -103,7 +92,7 @@ const upData = reactive({
   ],
   fix: [
     '修改天气 API',
-    '图标更换为 Icon',
+    '生日模式特别版',
     '时光胶囊显示错误',
     '移动端动画及细节'
   ]
@@ -125,8 +114,8 @@ const jumpTo = (url) => {
   width: 80%;
   height: 80%;
   background: rgb(255 255 255 / 40%);
-  border-radius: 6px;
-  padding: 40px;
+  border-radius: 10px;
+  padding: 10px;
 
   .close {
     position: absolute;
@@ -134,6 +123,10 @@ const jumpTo = (url) => {
     right: 14px;
     width: 28px;
     height: 28px;
+    // el-row 是 position: relative，DOM 上又在按钮之后，
+    // 会把按钮整块盖住（看得见、点不到），这里必须抬一层
+    z-index: 1;
+    cursor: pointer;
 
     &:hover {
       transform: scale(1.2);
@@ -151,7 +144,7 @@ const jumpTo = (url) => {
     .left {
       height: 100%;
       padding-left: 40px !important;
-      padding-bottom: 20px;
+      padding-bottom: 10px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -159,9 +152,9 @@ const jumpTo = (url) => {
       .logo {
         transform: translateY(-8%);
         font-family: 'Pacifico-Regular';
-        padding-left: 22px;
+        padding-top: 22px;
         width: 100%;
-        height: 200px;
+        height: 100px;
         min-height: 140px;
 
         .bg {
@@ -210,7 +203,7 @@ const jumpTo = (url) => {
 
           .upnote {
             padding: 20px;
-            height: calc(100% - 56px);
+            height: calc(100%);
             overflow-y: auto;
 
             .uptext {
@@ -226,7 +219,7 @@ const jumpTo = (url) => {
               .i-icon {
                 width: 22px;
                 height: 22px;
-                margin-right: 8px;
+                margin-right: 10px;
               }
             }
           }
@@ -246,7 +239,7 @@ const jumpTo = (url) => {
         align-items: center;
         flex-direction: row;
         font-size: 18px;
-        margin-bottom: 16px;
+        margin-bottom: 20px;
 
         .i-icon {
           width: 28px;

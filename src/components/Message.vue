@@ -8,12 +8,12 @@
         :class="{
           name: true,
           'text-hidden': true,
-          long: siteUrl[0].length >= 6
+          long: siteParts[0].text.length >= 6
         }"
       >
-        <span class="bg">{{ siteUrl[0] }}</span>
-        <span class="sm">.{{ siteUrl[1] }}</span>
-        <span class="smm">.{{ siteUrl[2] }}</span>
+        <span v-for="(part, i) in siteParts" :key="i" :class="part.cls">{{
+          part.text
+        }}</span>
       </div>
     </div>
     <!-- 简介 -->
@@ -39,21 +39,11 @@ import { Icon } from '@vicons/utils'
 import { QuoteLeft, QuoteRight } from '@vicons/fa'
 import { Error } from '@icon-park/vue-next'
 import { mainStore } from '@/store'
+import { siteParts } from '@/utils/site.js'
 const store = mainStore()
 
 // 主页站点logo
 const siteLogo = import.meta.env.VITE_SITE_MAIN_LOGO
-// 站点链接
-const siteUrl = computed(() => {
-  const url = import.meta.env.VITE_SITE_URL
-  if (!url) return 'imsyy.top'.split('.')
-  // 判断协议前缀
-  if (url.startsWith('http://') || url.startsWith('https://')) {
-    const urlFormat = url.replace(/^(https?:\/\/)/, '')
-    return urlFormat.split('.')
-  }
-  return url.split('.')
-})
 
 // 简介区域文字
 const descriptionText = reactive({
@@ -105,7 +95,7 @@ watch(
       border-radius: 50%;
       width: 120px;
       cursor: pointer;
-      transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
 
       &:hover {
         transform: rotate(360deg);
@@ -115,7 +105,7 @@ watch(
     .name {
       width: 100%;
       padding-left: 22px;
-      transform: translateY(-8px);
+      transform: translateY(6px);
       font-family: 'Pacifico-Regular';
 
       .bg {
@@ -167,7 +157,7 @@ watch(
 
       .text {
         margin: 0.75rem 1rem;
-        line-height: 2rem;
+        line-height: 2.2rem;
         margin-right: auto;
 
         p {
