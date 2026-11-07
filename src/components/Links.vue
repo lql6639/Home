@@ -56,13 +56,14 @@ import { computed, onMounted } from 'vue'
 // 可前往 https://www.xicons.org 自行挑选并在此处引入
 import {
   Fire,
-  Heart,
-  CompactDisc,
+  Blog,
   Code,
+  Qq,
   Cloud,
   Lock,
-  Blog,
-  Link
+  Heart,
+  CompactDisc,
+  Github
 } from '@vicons/fa' // 注意使用正确的类别
 import { mainStore } from '@/store'
 import { Swiper, SwiperSlide } from 'swiper/vue'
@@ -89,13 +90,14 @@ const siteLinksList = computed(() => {
 // 网站链接图标
 const siteIcon = {
   Fire,
-  Heart,
-  CompactDisc,
+  Blog,
   Code,
+  Qq,
   Cloud,
   Lock,
-  Blog,
-  Link
+  Heart,
+  CompactDisc,
+  Github
 }
 
 // 链接跳转
@@ -108,7 +110,7 @@ const jumpLink = (data) => {
 }
 
 onMounted(() => {
-  console.log(siteLinks)
+  console.log('网站加载完成')
 })
 </script>
 

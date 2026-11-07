@@ -6,6 +6,36 @@
     "link": "javascript:;"
   },
   {
+    "icon": "Blog",
+    "iconUrl": "",
+    "name": "Blog",
+    "link": "https://blog.lovlin.eu.cc"
+  },
+  {
+    "icon": "Code",
+    "iconUrl": "",
+    "name": "Server",
+    "link": "https://server.lovlin.eu.cc"
+  },
+  {
+    "icon": "Qq",
+    "iconUrl": "",
+    "name": "Tencent",
+    "link": "https://tencent.lovlin.eu.cc"
+  },
+  {
+    "icon": "Cloud",
+    "iconUrl": "",
+    "name": "Cloud",
+    "link": "https://cloud.lovlin.eu.cc"
+  },
+  {
+    "icon": "Lock",
+    "iconUrl": "",
+    "name": "Meting",
+    "link": "https://api.lovlin.eu.cc"
+  },
+  {
     "icon": "Heart",
     "iconUrl": "",
     "name": "Love",
@@ -18,21 +48,9 @@
     "link": "https://music.lovlin.eu.cc"
   },
   {
-    "icon": "Code",
+    "icon": "Github",
     "iconUrl": "",
-    "name": "API",
-    "link": "https://api.lovlin.eu.cc"
-  },
-  {
-    "icon": "Cloud",
-    "iconUrl": "",
-    "name": "Cloud",
-    "link": "https://cloud.lovlin.eu.cc"
-  },
-  {
-    "icon": "Lock",
-    "iconUrl": "",
-    "name": "Meting",
-    "link": "https://meting.lovlin.eu.cc"
+    "name": "Github",
+    "link": "https://github.com/lql6639"
   }
 ]
