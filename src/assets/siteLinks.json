@@ -9,43 +9,43 @@
     "icon": "Blog",
     "iconUrl": "",
     "name": "Blog",
-    "link": "https://blog.lovlin.eu.cc"
+    "link": "https://blog.{site}"
   },
   {
     "icon": "Code",
     "iconUrl": "",
     "name": "Server",
-    "link": "https://server.lovlin.eu.cc"
+    "link": "https://server.{site}"
   },
   {
     "icon": "Qq",
     "iconUrl": "",
     "name": "Tencent",
-    "link": "https://tencent.lovlin.eu.cc"
+    "link": "https://tencent.{site}"
   },
   {
     "icon": "Cloud",
     "iconUrl": "",
     "name": "Cloud",
-    "link": "https://cloud.lovlin.eu.cc"
+    "link": "https://cloud.{site}"
   },
   {
     "icon": "Lock",
     "iconUrl": "",
     "name": "Meting",
-    "link": "https://api.lovlin.eu.cc"
+    "link": "https://api.{site}"
   },
   {
     "icon": "Heart",
     "iconUrl": "",
     "name": "Love",
-    "link": "https://love.lovlin.eu.cc"
+    "link": "https://love.{site}"
   },
   {
     "icon": "CompactDisc",
     "iconUrl": "",
     "name": "Music",
-    "link": "https://music.lovlin.eu.cc"
+    "link": "https://music.{site}"
   },
   {
     "icon": "Github",

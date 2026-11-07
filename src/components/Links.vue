@@ -73,9 +73,13 @@ import 'swiper/css/pagination'
 // Import required modules
 import { Pagination, Mousewheel } from 'swiper/modules'
 import siteLinks from '@/assets/siteLinks.json'
+import { siteHost } from '@/utils/site.js'
 
 const store = mainStore()
 const modules = [Pagination, Mousewheel]
+
+// 链接里的 {site} 换成 .env 配的站点域名，换域名只改 .env
+const resolveLink = (link = '') => link.replace(/\{site\}/g, siteHost)
 
 // 计算网站链接
 const siteLinksList = computed(() => {
@@ -105,7 +109,7 @@ const jumpLink = (data) => {
   if (data.name === 'Hot' && store.musicClick) {
     if (typeof $openList === 'function') $openList()
   } else {
-    window.open(data.link, '_blank')
+    window.open(resolveLink(data.link), '_blank')
   }
 }
 
