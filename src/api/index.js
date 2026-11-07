@@ -2,6 +2,13 @@
 
 import fetchJsonp from 'fetch-jsonp'
 
+// 接口地址跟随 .env 的 VITE_SITE_URL，改 .env 这里自动生效
+const API_URL = String(import.meta.env.VITE_SITE_URL)
+  .trim()
+  .replace(/^(https?:)?\/\//i, '')
+  .replace(/\/.*$/, '')
+const API_BASE = `https://server.${API_URL}`
+
 /**
  * 音乐播放器
  */
@@ -66,7 +73,7 @@ const isTemperature = (value) =>
 
 // 获取地理位置信息
 export const getAdcode = async () => {
-  const res = await fetch(`https://api.lovlin.eu.cc/v1/ipinfo`)
+  const res = await fetch(`${API_BASE}/v1/ipinfo`)
   if (!res.ok) {
     throw new Error('地区请求失败')
   }
@@ -75,7 +82,7 @@ export const getAdcode = async () => {
 }
 
 export const getWeather = async () => {
-  const res = await fetch('https://api.lovlin.eu.cc/v1/weather/realtime')
+  const res = await fetch(`${API_BASE}/v1/weather/realtime`)
   if (!res.ok) {
     throw new Error('天气请求失败')
   }
