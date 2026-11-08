@@ -124,10 +124,10 @@ onMounted(() => {
   const styleContent = 'color: rgb(30,152,255);'
   const title1 = 'Lovlin_0206 の Home'
   const title2 = `
- _  __   ___   _   _____    ___    ____      _
-| |/ /  / _ \\  (_) |__  |  / _ \\  |  _ \\    / \\
-| ' /  | | | | | |   / /  | | | | | |_) |  / _ \\
-| . \\  | |_| | | |  / /_  | |_| | |  _ <  / ___ \\
+ _  __   ___    _   _____   ___    ____       _
+| |/ /  / _ \\  (_) |__  |  / _ \\  |  _ \\     / \\
+| ' /  | | | | | |   / /  | | | | | |_) |   / _ \\
+| . \\  | |_| | | |  / /_  | |_| | |  _ <   / ___ \\
 |_|\\_\\  \\___/  |_| |____|  \\___/  |_| \\_\\ /_/   \\_\\`
   const content = `\n\n版本: ${config.version}\nAuthor: ${config.author} & Github: ${config.AuthorGithub}`
   console.info(
