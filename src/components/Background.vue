@@ -49,8 +49,8 @@ const reveal = () => {
   store.setImgLoadStatus(true)
 }
 
-// 兜底是否已经用过，避免图片反复报错时循环切换
-let fallbackTried = false
+// 兜底次数：0 未兜底，1 已换成本地同名图，2 已退到第一张
+let fallbackStep = 0
 
 // 更换壁纸链接
 const changeBg = (type) => {
@@ -84,9 +84,9 @@ const imgAnimationEnd = () => {
 // 图片显示失败
 const imgLoadError = () => {
   console.error('壁纸加载失败：', bgUrl.value)
-  // 兜底图固定用 background1.jpg，本地一定有，最多试一次
-  if (!fallbackTried) {
-    fallbackTried = true
+  // ① 远程挂了先换本地同号图：画面就是这张，不会永远退回第一张
+  if (fallbackStep === 0) {
+    fallbackStep = 1
     ElMessage({
       message: '壁纸加载失败，已临时切换回默认',
       icon: h(Error, {
@@ -94,10 +94,16 @@ const imgLoadError = () => {
         fill: '#efefef'
       })
     })
+    bgUrl.value = `/home-image/background${bgRandom}.jpg`
+    return
+  }
+  // ② 本地同号图也没有（删过图）：退到一定存在的第一张
+  if (fallbackStep === 1) {
+    fallbackStep = 2
     bgUrl.value = '/home-image/background1.jpg'
     return
   }
-  // 本地兜底也挂了：直接放行，别让加载层一直转
+  // ③ 全挂了：直接放行，别让加载层一直转
   reveal()
 }
 
