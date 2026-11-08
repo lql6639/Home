@@ -6,7 +6,7 @@
       class="bg"
       alt="cover"
       @load="imgLoadComplete"
-      @error.once="imgLoadError"
+      @error="imgLoadError"
       @animationend="imgAnimationEnd"
     />
     <div :class="store.backgroundShow ? 'gray hidden' : 'gray'" />
@@ -30,12 +30,27 @@ import { Error } from '@icon-park/vue-next'
 const store = mainStore()
 const bgUrl = ref(null)
 const imgTimeout = ref(null)
+// 图片迟迟不响应时的强制放行定时器
+const hardTimeout = ref(null)
 const emit = defineEmits(['loadComplete'])
 const mainUrl = import.meta.env.VITE_EXTERNAL_BACKGROUND_URL
 
 // 壁纸随机数
 // 请依据文件夹内的图片个数修改 Math.random() 后面的第一个数字
 const bgRandom = Math.floor(Math.random() * 10 + 1)
+
+// 最晚多久放行加载层。远程壁纸有 1.6~3MB，网络慢时能拖到十几秒，
+// 而图片请求卡死时 @load / @error 都不会触发，加载层会一直转
+const LOAD_TIMEOUT = 6000
+
+// 放行加载层（幂等：先到先得，后面的调用直接忽略）
+const reveal = () => {
+  if (store.imgLoadStatus) return
+  store.setImgLoadStatus(true)
+}
+
+// 兜底是否已经用过，避免图片反复报错时循环切换
+let fallbackTried = false
 
 // 更换壁纸链接
 const changeBg = (type) => {
@@ -52,10 +67,9 @@ const changeBg = (type) => {
 
 // 图片加载完成
 const imgLoadComplete = () => {
+  clearTimeout(hardTimeout.value)
   imgTimeout.value = setTimeout(
-    () => {
-      store.setImgLoadStatus(true)
-    },
+    reveal,
     Math.floor(Math.random() * (600 - 300 + 1)) + 300
   )
 }
@@ -70,14 +84,21 @@ const imgAnimationEnd = () => {
 // 图片显示失败
 const imgLoadError = () => {
   console.error('壁纸加载失败：', bgUrl.value)
-  ElMessage({
-    message: '壁纸加载失败，已临时切换回默认',
-    icon: h(Error, {
-      theme: 'filled',
-      fill: '#efefef'
+  // 兜底图固定用 background1.jpg，本地一定有，最多试一次
+  if (!fallbackTried) {
+    fallbackTried = true
+    ElMessage({
+      message: '壁纸加载失败，已临时切换回默认',
+      icon: h(Error, {
+        theme: 'filled',
+        fill: '#efefef'
+      })
     })
-  })
-  bgUrl.value = `/home-image/background${bgRandom}.jpg`
+    bgUrl.value = '/home-image/background1.jpg'
+    return
+  }
+  // 本地兜底也挂了：直接放行，别让加载层一直转
+  reveal()
 }
 
 // 监听壁纸切换
@@ -91,10 +112,13 @@ watch(
 onMounted(() => {
   // 加载壁纸
   changeBg(store.coverType)
+  // 无论图片有没有回来，最晚 6s 也要把页面放出来
+  hardTimeout.value = setTimeout(reveal, LOAD_TIMEOUT)
 })
 
 onBeforeUnmount(() => {
   clearTimeout(imgTimeout.value)
+  clearTimeout(hardTimeout.value)
 })
 </script>
 
