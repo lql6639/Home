@@ -113,7 +113,6 @@ watch(
       }
 
       .sm {
-        margin-left: 6px;
         font-size: 3.8rem;
 
         @media (min-width: 720px) and (max-width: 789px) {
@@ -178,7 +177,7 @@ watch(
     }
   }
 
-  @media (max-width: 390px) {
+  @media (max-width: 480px) {
     .logo {
       flex-direction: column;
 
@@ -188,22 +187,24 @@ watch(
 
       .name {
         margin-left: 0;
+        padding-left: 0;
         height: auto;
         transform: none;
         text-align: center;
 
         .bg {
-          font-size: 3.5rem;
+          font-size: 4.4rem;
         }
 
-        .sm {
-          font-size: 1.4rem;
+        .sm,
+        .smm {
+          font-size: 3.4rem;
         }
       }
     }
 
     .description {
-      margin-top: 2.5rem;
+      margin-top: 1.5rem;
     }
   }
 }
