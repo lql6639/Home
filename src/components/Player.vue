@@ -89,39 +89,48 @@ const listHeight = computed(() => {
   return props.listMaxHeight + 'px'
 })
 
+// 歌单拉取失败（接口 500、超时、返回空）
+const showLoadError = () => {
+  store.musicIsOk = false
+  ElMessage({
+    message: '播放器加载失败',
+    grouping: true,
+    icon: h(PlayWrong, {
+      theme: 'filled',
+      fill: '#efefef'
+    })
+  })
+}
+
 // 初始化播放器
 onMounted(() => {
   nextTick(() => {
-    try {
-      getPlayerList(props.songServer, props.songType, props.songId).then(
-        (res) => {
-          // 更改播放器加载状态
-          store.musicIsOk = true
-          // 生成歌单
-          sourceList.value = res
-          // 生日模式下列表已被生日歌顶掉，等关闭蛋糕时再还原
-          if (!birthdayActive) playList.value = res
-          nextTick(() => queueCenterLrc())
-          console.log(
-            '音乐加载完成',
-            playIndex.value,
-            playList.value.length,
-            props.volume
-          )
+    getPlayerList(props.songServer, props.songType, props.songId)
+      .then((res) => {
+        // 接口挂了或歌单为空：别让播放器一直停在"加载中"
+        if (!Array.isArray(res) || res.length === 0) {
+          showLoadError()
+          return
         }
-      )
-    } catch (err) {
-      console.error(err)
-      store.musicIsOk = false
-      ElMessage({
-        message: '播放器加载失败',
-        grouping: true,
-        icon: h(PlayWrong, {
-          theme: 'filled',
-          fill: '#efefef'
-        })
+        // 更改播放器加载状态
+        store.musicIsOk = true
+        // 生成歌单
+        sourceList.value = res
+        // 生日模式下列表已被生日歌顶掉，等关闭蛋糕时再还原
+        if (!birthdayActive) playList.value = res
+        nextTick(() => queueCenterLrc())
+        console.log(
+          '音乐加载完成',
+          playIndex.value,
+          playList.value.length,
+          props.volume
+        )
       })
-    }
+      // fetch 的异常是异步抛的，外面那层 try/catch 抓不到，必须在这里兜
+      .catch((err) => {
+        console.error(err)
+        showLoadError()
+      })
   })
 })
 

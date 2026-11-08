@@ -20,6 +20,9 @@ export const getPlayerList = async (server, type, id) => {
   )
   const data = await res.json()
 
+  // 接口异常时返回的是对象（{code,msg}），歌单为空时是 []，都别往下走
+  if (!Array.isArray(data) || data.length === 0) return []
+
   if (data[0].url.startsWith('@')) {
     // eslint-disable-next-line no-unused-vars
     const [handle, jsonpCallback, jsonpCallbackFunction, url] = data[0].url
