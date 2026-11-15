@@ -48,10 +48,10 @@
     "link": "https://music.{site}"
   },
   {
-    "icon": "Github",
+    "icon": "Lock",
     "iconUrl": "",
-    "name": "Github",
-    "link": "https://github.com/lql6639"
+    "name": "Status",
+    "link": "https://status.{site}"
   },
   {
     "icon": "Blog",
