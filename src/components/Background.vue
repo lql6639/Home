@@ -1,6 +1,7 @@
 <template>
   <div :class="store.backgroundShow ? 'cover show' : 'cover'">
     <img
+      v-if="bgUrl"
       v-show="store.imgLoadStatus"
       :src="bgUrl"
       class="bg"
