@@ -1,15 +1,14 @@
 [
   {
     "name": "举个栗子",
-    "description": "雾散处，玫瑰花开 ~",
+    "description": "拖延散场的时间，并不会改变结局。",
     "url": "https://alcy.cc",
     "avatar": "https://alcy.cc/avatar.jpg"
   },
   {
     "name": "猫不吃鱼",
-    "description": "无人相伴的路，惝恍迷离的舞 ~",
+    "description": "无人相伴的路，惝恍迷离的舞。",
     "url": "https://starsei.com",
-    "avatar": "https://starsei.com/favicon.ico",
-    "logo": true
+    "avatar": "https://cos.starsei.com/handsome/img/avatar.jpg"
   }
 ]

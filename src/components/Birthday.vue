@@ -75,7 +75,7 @@ const {
     animation: wish-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) 1.6s both;
 
     .title {
-      font-family: 'HarmonyOS_Regular', sans-serif;
+      font-family: 'HarmonyOS Sans SC', sans-serif;
       font-size: clamp(1.5rem, 4.2vw, 2.6rem);
       letter-spacing: 0.3em;
       text-indent: 0.3em;

@@ -53,6 +53,8 @@
               alt=""
               width="45"
               height="45"
+              loading="lazy"
+              referrerpolicy="no-referrer"
             />
             <div class="friend-copy">
               <h3>{{ friend.name }}</h3>

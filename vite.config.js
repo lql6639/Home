@@ -43,18 +43,34 @@ export default ({ mode }) =>
         workbox: {
           skipWaiting: true,
           clientsClaim: true,
+          // 页面导航走网络优先：部署新版本后旧 HTML 不会一直被缓存命中
+          navigateFallback: 'index.html',
           runtimeCaching: [
             {
-              urlPattern: /(.*?)\.(js|css|woff2|woff|ttf)/, // js / css 静态资源缓存
+              // HTML 文档：网络优先，拿不到新内容才回退缓存
+              urlPattern: ({ request }) => request.destination === 'document',
+              handler: 'NetworkFirst',
+              options: {
+                cacheName: 'page-cache',
+                networkTimeoutSeconds: 3,
+                expiration: {
+                  maxEntries: 32,
+                  maxAgeSeconds: 60 * 60 * 24
+                }
+              }
+            },
+            {
+              // js/css 带内容 hash，可长缓存；加过期时间防止无限膨胀
+              urlPattern: /(.*?)\.(js|css|woff2|woff|ttf)/,
               handler: 'CacheFirst',
               options: {
-                cacheName: 'js-css-cache'
+                cacheName: 'js-css-cache',
+                expiration: {
+                  maxEntries: 100,
+                  maxAgeSeconds: 60 * 60 * 24 * 30
+                }
               }
             }
-            // {
-            //   urlPattern: /^\/home-image\//, // 排除 /images 下的内容
-            //   handler: "NetworkOnly", // 完全依赖网络请求
-            // },
           ]
         },
         manifest: {

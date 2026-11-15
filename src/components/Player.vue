@@ -480,7 +480,7 @@ onBeforeUnmount(() => {
 .aplayer {
   width: 80%;
   border-radius: 6px;
-  font-family: 'HarmonyOS_Regular', sans-serif !important;
+  font-family: 'HarmonyOS Sans SC', sans-serif !important;
 
   :deep(.aplayer-body) {
     background-color: transparent;
