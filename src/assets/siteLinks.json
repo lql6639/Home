@@ -52,5 +52,23 @@
     "iconUrl": "",
     "name": "Github",
     "link": "https://github.com/lql6639"
+  },
+  {
+    "icon": "Blog",
+    "iconUrl": "",
+    "name": "Firefly",
+    "link": "https://firefly.{site}"
+  },
+  {
+    "icon": "Blog",
+    "iconUrl": "",
+    "name": "Mizuki",
+    "link": "https://mizuki.{site}"
+  },
+  {
+    "icon": "Blog",
+    "iconUrl": "",
+    "name": "Shirone",
+    "link": "https://shirone.{site}"
   }
 ]
